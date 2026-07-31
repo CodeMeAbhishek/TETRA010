@@ -35,13 +35,13 @@ class TestScoringEngines(unittest.TestCase):
         p1 = PatientData(age=50, sex="male", is_smoker=True, systolic_bp=150, total_cholesterol_mmol_L=5.0, has_diabetes=False)
         resp1 = run_who_cvd_engine(p1)
         self.assertEqual(resp1.extra_data["chart_used"], "lab_based")
-        self.assertEqual(resp1.risk_percentage, "<5%")
+        self.assertEqual(resp1.risk_percentage, "10%")
         
         # Non lab based
         p2 = PatientData(age=50, sex="male", is_smoker=True, systolic_bp=150, bmi=26, has_diabetes=False)
         resp2 = run_who_cvd_engine(p2)
         self.assertEqual(resp2.extra_data["chart_used"], "non_lab_based")
-        self.assertEqual(resp2.risk_percentage, "<5%")
+        self.assertEqual(resp2.risk_percentage, "12%")
 
     def test_htn_stage2(self):
         p = PatientData(systolic_bp=145, diastolic_bp=85)

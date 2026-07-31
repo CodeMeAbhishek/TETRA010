@@ -12,38 +12,34 @@ CHARTS = load_who_cvd_charts()
 def get_age_band(age: int) -> str:
     if age < 40:
         return None # WHO charts start at 40
-    elif 40 <= age <= 49:
-        return "40-49"
-    elif 50 <= age <= 59:
-        return "50-59"
-    elif 60 <= age <= 69:
-        return "60-69"
-    else:
-        return "70+"
+    elif 40 <= age <= 44: return "40-44"
+    elif 45 <= age <= 49: return "45-49"
+    elif 50 <= age <= 54: return "50-54"
+    elif 55 <= age <= 59: return "55-59"
+    elif 60 <= age <= 64: return "60-64"
+    elif 65 <= age <= 69: return "65-69"
+    else: return "70-74"
 
 def get_sbp_band(sbp: int) -> str:
-    if sbp < 140:
-        return "120-139"
-    elif 140 <= sbp <= 159:
-        return "140-159"
-    elif 160 <= sbp <= 179:
-        return "160-179"
-    else:
-        return "180+"
+    if sbp < 120: return "<120"
+    elif 120 <= sbp <= 139: return "120-139"
+    elif 140 <= sbp <= 159: return "140-159"
+    elif 160 <= sbp <= 179: return "160-179"
+    else: return ">=180"
 
 def get_chol_band(chol: float) -> str:
-    # Chol in mmol/L: 4, 5, 6, 7, 8
-    if chol < 4.5: return "4"
-    if chol < 5.5: return "5"
-    if chol < 6.5: return "6"
-    if chol < 7.5: return "7"
-    return "8"
+    if chol < 4.0: return "<4"
+    if chol < 5.0: return "4-4.9"
+    if chol < 6.0: return "5-5.9"
+    if chol < 7.0: return "6-6.9"
+    return ">=7"
 
 def get_bmi_band(bmi: float) -> str:
     if bmi < 20: return "<20"
     if bmi < 25: return "20-24"
     if bmi < 30: return "25-29"
-    return "30+"
+    if bmi < 35: return "30-34"
+    return ">=35"
 
 def run_who_cvd_engine(patient: PatientData) -> EngineResponse:
     response = EngineResponse()
@@ -101,10 +97,13 @@ def run_who_cvd_engine(patient: PatientData) -> EngineResponse:
             "WHO CVD Guidelines"
         ))
         
-    # Check threshold for referral based on string e.g. "20-30%", ">=30%", "<5%"
     if response.risk_percentage:
-        if "20" in response.risk_percentage or "30" in response.risk_percentage:
-            response.referral_recommended = True
-            response.referral_reason = f"WHO CVD risk is {response.risk_percentage} (Threshold >=20%)"
+        try:
+            risk_val = int(response.risk_percentage.replace("%", ""))
+            if risk_val >= 20:
+                response.referral_recommended = True
+                response.referral_reason = f"WHO CVD risk is {response.risk_percentage} (Threshold >=20%)"
+        except ValueError:
+            pass
             
     return response
