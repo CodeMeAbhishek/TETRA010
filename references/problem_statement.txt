@@ -1,0 +1,35 @@
+Track A: HealthTech 
+Problem Statement 1 
+AI-Powered Lifestyle Disease Risk Prediction & Early Referral Assistant 
+ 
+Background 
+India is witnessing a rapid rise in lifestyle diseases such as diabetes, hypertension, chronic 
+kidney disease (CKD), cardiovascular disease, and stroke. Despite the availability of effective 
+screening and treatment protocols, many patients, especially in rural and semi-urban regions 
+are diagnosed only after developing irreversible complications. 
+Primary care providers often face challenges such as limited access to updated clinical 
+guidelines, time constraints, incomplete patient records, and lack of decision-support tools. 
+Preventive risk assessment, regular monitoring, and timely referrals remain inconsistent, 
+resulting in avoidable morbidity, mortality, and healthcare costs. 
+Problem Statement 
+Design an AI-powered clinical decision support assistant that enables early identification of 
+individuals at high risk for lifestyle diseases and their complications. 
+The solution should utilize readily available patient information including demographics, 
+symptoms, vital signs, medical history, medications, and laboratory investigations—to 
+generate personalized risk assessments. It should identify missing investigations, 
+recommend evidence-based screening tests, detect warning signs for disease progression, 
+and advise timely referral to qualified healthcare professionals whenever appropriate. 
+The solution should be intuitive, affordable, multilingual, and capable of functioning 
+independently of any specific hospital information system or healthcare provider. It should 
+also provide explainable AI outputs so that clinicians understand the rationale behind 
+recommendations. 
+Expected Outcomes 
+• Risk Scoring: AI-generated risk scores for diabetes, hypertension, CKD, 
+cardiovascular disease, and stroke. 
+• Early Warning: Early warning alerts for patients likely to develop complications. 
+• Clinical Guidance: Recommendations for missing investigations based on standard 
+clinical guidelines. 
+• Referral Protocols: Referral suggestions based on patient risk profile. 
+• Patient Engagement: Patient-friendly education material in regional languages. 
+• Scalable Prototype: A scalable prototype suitable for deployment in resource-limited 
+primary healthcare settings.

@@ -1,0 +1,70 @@
+Based on the system architecture you provided, your platform requires deterministic, rule-based clinical logic to evaluate patient data, assign risk categories, determine when to intervene, and recommend missing investigations. 
+
+Drawing from the provided **2017 ACC/AHA Clinical Practice Guideline for the Management of High Blood Pressure**, here are the most important data points, exact thresholds, and algorithmic rules you can integrate directly into your backend engines:
+
+### 1. HTN Scoring Engine: ACC/AHA Blood Pressure Categories
+For your "HTN" module within the Rule-Based Clinical Scoring Engine, the 2017 guidelines established exact mmHg cutoffs to categorize adult blood pressure. If a patient's systolic and diastolic readings fall into two different categories, **the patient should be designated to the higher category**. 
+
+*   **Normal BP:** Systolic <120 mm Hg **AND** Diastolic <80 mm Hg.
+*   **Elevated BP:** Systolic 120–129 mm Hg **AND** Diastolic <80 mm Hg.
+*   **Stage 1 Hypertension:** Systolic 130–139 mm Hg **OR** Diastolic 80–89 mm Hg.
+*   **Stage 2 Hypertension:** Systolic $\ge$140 mm Hg **OR** Diastolic $\ge$90 mm Hg.
+
+### 2. Treatment Decision Logic (For the Referral & Decision Engine)
+The guidelines use a combination of the patient's BP stage and their **10-year Atherosclerotic Cardiovascular Disease (ASCVD) risk** to determine the necessary clinical action. 
+
+*   **Normal BP:** Promote optimal lifestyle habits and reassess in 1 year.
+*   **Elevated BP:** Initiate nonpharmacological therapy (lifestyle changes) and reassess in 3–6 months.
+*   **Stage 1 Hypertension (Low Risk, <10% ASCVD risk):** Initiate nonpharmacological therapy and reassess in 3–6 months.
+*   **Stage 1 Hypertension (High Risk, $\ge$10% ASCVD risk or known clinical CVD):** Initiate a combination of nonpharmacological therapy AND BP-lowering medication, then reassess in 1 month.
+*   **Stage 2 Hypertension:** Promptly initiate nonpharmacological therapy AND BP-lowering medication (using 2 agents of different classes), and reassess in 1 month.
+
+*Note on Risk Reference:* For your Stroke/CVD risk dashboard, the guideline heavily relies on the **ACC/AHA Pooled Cohort Equations** to estimate this 10-year ASCVD risk (which includes nonfatal stroke, nonfatal MI, and cardiovascular death) rather than Framingham. However, the guideline does explicitly mention the **CHA₂DS₂-VASc** score specifically for predicting stroke risk in patients with Atrial Fibrillation (AFib). 
+
+### 3. Missing-Investigation Recommender Rules
+For newly diagnosed hypertension patients, the guidelines dictate a "Basic testing" panel to evaluate for cardiovascular risk, establish baselines, and screen for secondary causes. If your completeness checker identifies that these are missing, your recommender should prompt the clinician for:
+*   Fasting blood glucose.
+*   Complete blood count (CBC).
+*   Lipid profile.
+*   Serum creatinine with eGFR.
+*   Serum sodium, potassium, and calcium.
+*   Thyroid-stimulating hormone (TSH).
+*   Urinalysis.
+*   Electrocardiogram (ECG).
+*   *Optional tests to recommend based on specific patient presentations:* Echocardiogram, uric acid, and urinary albumin-to-creatinine ratio (ACR).
+
+### 4. Cross-Module Rules (KDIGO/CKD, Diabetes, and Stroke Interactions)
+Because your engine handles multiple co-morbidities (IDRS/Diabetes, KDIGO/CKD, Stroke), your system will need rules for when these conditions overlap with hypertension:
+
+*   **CKD Interaction:** Adults with hypertension and Chronic Kidney Disease (CKD) should be treated to a strict BP goal of **less than 130/80 mm Hg**. If the patient has stage 3 or higher CKD, or stage 1-2 CKD with albuminuria ($\ge$300 mg/d or $\ge$300 mg/g albumin-to-creatinine ratio), the first-line medication recommended is an ACE inhibitor (or ARB if ACE is not tolerated).
+*   **Diabetes Interaction:** Adults with diabetes mellitus (DM) and hypertension should be treated to a BP goal of **less than 130/80 mm Hg**. First-line agents include thiazide diuretics, ACE inhibitors, ARBs, or CCBs. ACE inhibitors or ARBs are specifically recommended if albuminuria is present.
+*   **Stroke Interaction (Secondary Prevention):** For adults with previously treated hypertension who experience a stroke or transient ischemic attack (TIA), they should be restarted on antihypertensive treatment after the first few days of the index event. The target goal for adults who experience a stroke or TIA is a BP of **less than 130/80 mm Hg**. Preferred treatments include a thiazide diuretic, an ACE inhibitor/ARB, or a combination of both.
+
+To integrate the stroke-specific guidelines into your Rule-Based Clinical Scoring and Referral Decision Engine, here are the critical rules, blood pressure (BP) thresholds, and medication logics based on the 2017 ACC/AHA guidelines. 
+
+These rules should be separated into **acute stroke management** (routing to immediate care/hospital protocols) and **secondary stroke prevention** (long-term outpatient management).
+
+### 1. Acute Intracerebral Hemorrhage (ICH) Logic
+If a patient presents with an acute intracerebral hemorrhage, the engine should evaluate their systolic blood pressure (SBP) to guide immediate intervention:
+*   **SBP > 220 mm Hg:** It is reasonable to use continuous intravenous drug infusion and closely monitor BP to lower SBP.
+*   **SBP 150 to 220 mm Hg (within 6 hours of symptom onset):** The engine should **flag against** immediate lowering of SBP to <140 mm Hg. The guidelines warn that this is not beneficial for reducing death or severe disability and can be potentially harmful.
+
+### 2. Acute Ischemic Stroke Logic
+For patients presenting with an acute ischemic stroke, the BP targets depend on their eligibility for specific therapies (like IV tPA/thrombolysis):
+*   **Eligible for IV tPA:** BP must be lowered to **<185/110 mm Hg** *before* initiating thrombolytic therapy. After therapy is initiated, the engine should recommend maintaining BP at **<180/105 mm Hg** for at least the first 24 hours.
+*   **Not eligible for IV tPA (and BP $\ge$ 220/120 mm Hg):** It may be reasonable to lower BP by **15% during the first 24 hours** after the onset of the stroke.
+*   **Not eligible for IV tPA (and BP < 220/120 mm Hg):** The engine should **withhold** recommendations to initiate or reinitiate antihypertensive treatment within the first 48 to 72 hours, as it is not effective at preventing death or dependency in this window.
+*   **Transition to Maintenance:** Once the patient is neurologically stable, starting or restarting antihypertensive therapy during hospitalization is recommended for patients with a BP **>140/90 mm Hg**. 
+
+### 3. Secondary Stroke Prevention (Long-term Outpatient Logic)
+For your risk dashboard and long-term care plans, the following rules apply to patients who have a history of stroke or transient ischemic attack (TIA):
+*   **When to start medication (Previously untreated):** If the patient was not previously treated for hypertension, antihypertensive treatment should be prescribed a few days after the index event if their established BP is **$\ge$140/90 mm Hg**. 
+*   **When to restart medication (Previously treated):** If the patient was already on BP medication prior to the event, they should be restarted on their treatment after the first few days of the event to reduce the risk of recurrent stroke.
+*   **BP Target:** The overall target goal for adults with a previous stroke or TIA is **less than 130/80 mm Hg**. 
+*   **Lacunar Stroke Specifics:** For adults who specifically had a lacunar stroke, a target SBP of **less than 130 mm Hg** is reasonable.
+
+### 4. Medication Recommendations for Stroke Patients
+When your Missing-Investigation or Referral Engine outputs treatment recommendations for secondary stroke prevention, it should suggest the following first-line agents:
+*   **Thiazide diuretics, ACE inhibitors, or ARBs**.
+*   A specific combination of a **thiazide diuretic plus an ACE inhibitor** is also useful.
+*   The final selection of these drugs should always be individualized based on the patient's other comorbidities (e.g., matching with KDIGO/CKD rules or Diabetes rules).
