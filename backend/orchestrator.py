@@ -188,9 +188,12 @@ def _build_messages(structured_data: dict, language: str) -> list[dict]:
         "or inventing risk numbers. Your ONLY job is to take the structured JSON provided — which "
         "contains deterministic risk scores computed by validated medical algorithms — and explain "
         "them clearly. "
-        f"Respond entirely in {language}. "
-        "If a regional language (Hindi, Gujarati, Tamil, etc.) is requested, ensure medical terms "
-        "are explained in plain words a patient or village health worker can understand. "
+        f"Respond entirely in the requested language: {language}. "
+        "CRITICAL: You MUST write using the native script and native characters of the requested language "
+        "(e.g., Gujarati script for Gujarati, Devanagari script for Hindi/Marathi, Tamil script for Tamil, "
+        "Telugu script for Telugu, Kannada script for Kannada). "
+        "DO NOT use Latin characters, Hinglish, or any transliterated representation. "
+        "If a regional language is requested, ensure medical terms are explained in plain words a patient or village health worker can understand. "
         "Do not add any score values beyond what the JSON contains."
     )
 
