@@ -86,16 +86,29 @@ To help evaluators and mentors verify the clinical scoring logic quickly, the sy
 ### 1. Test Case P03: Multi-Condition High Risk (Full Lab Data)
 Displays concurrent risks: Stage 2 Hypertension, High IDRS, and CKD Orange. The referral engine recommends urgent referral with explicit clinical justifications.
 
-<img src="references/p03_results.png" width="680" alt="P03 High Risk Case" style="border: 1px solid #e2e8f0; border-radius: 6px; margin: 10px 0;" />
+*Clinical Results Dashboard:*
+<img src="references/p03_results.png" width="680" alt="P03 High Risk Dashboard" style="border: 1px solid #e2e8f0; border-radius: 6px; margin: 10px 0;" />
+
+*AI Clinical Explanation & Referral Note (P03):*
+<img src="references/p03_explanation.png" width="680" alt="P03 AI Explanation" style="border: 1px solid #e2e8f0; border-radius: 6px; margin: 10px 0;" />
 
 ### 2. Test Case P04: Missing Labs Fallback (Graceful Degradation)
 Displays CVD calculation automatically falling back to the non-lab BMI-based chart due to missing cholesterol. The required investigations panel flags missing tests.
 
-<img src="references/p04_results.png" width="680" alt="P04 Graceful Degradation Case" style="border: 1px solid #e2e8f0; border-radius: 6px; margin: 10px 0;" />
+*Clinical Results Dashboard:*
+<img src="references/p04_results.png" width="680" alt="P04 Graceful Degradation Dashboard" style="border: 1px solid #e2e8f0; border-radius: 6px; margin: 10px 0;" />
+
+*AI Clinical Explanation & Missing Investigations (P04):*
+<img src="references/p04_explanation.png" width="680" alt="P04 AI Explanation" style="border: 1px solid #e2e8f0; border-radius: 6px; margin: 10px 0;" />
 
 ### 3. Test Case P06: Healthy Baseline (All Normal)
 Displays the calm state UI when all clinical guidelines are met within normal limits.
 
-<img src="references/p06_results.png" width="680" alt="P06 Healthy Baseline" style="border: 1px solid #e2e8f0; border-radius: 6px; margin: 10px 0;" />
+*Clinical Results Dashboard:*
+<img src="references/p06_results.png" width="680" alt="P06 Healthy Baseline Dashboard" style="border: 1px solid #e2e8f0; border-radius: 6px; margin: 10px 0;" />
+
+*AI Clinical Explanation & Action Plan (P06):*
+<img src="references/p06_explanation.png" width="680" alt="P06 AI Explanation" style="border: 1px solid #e2e8f0; border-radius: 6px; margin: 10px 0;" />
+
 
 
