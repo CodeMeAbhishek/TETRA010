@@ -26,42 +26,55 @@ def run_idrs_engine(patient: PatientData) -> EngineResponse:
             ))
         return response
 
-    score = 0
-    
-    # Age score
+    # --- Compute each component's points independently ---
+    age_pts = 0
     if patient.age < 35:
-        score += 0
+        age_pts = 0
     elif 35 <= patient.age <= 49:
-        score += 20
+        age_pts = 20
     else:
-        score += 30
-        
-    # Waist score
+        age_pts = 30
+
     waist = patient.waist_circumference_cm
+    waist_pts = 0
     if patient.sex == "female":
-        if waist < 80: score += 0
-        elif 80 <= waist <= 89: score += 10
-        else: score += 20
+        if waist < 80:
+            waist_pts = 0
+        elif 80 <= waist <= 89:
+            waist_pts = 10
+        else:
+            waist_pts = 20
     elif patient.sex == "male":
-        if waist < 90: score += 0
-        elif 90 <= waist <= 99: score += 10
-        else: score += 20
-        
-    # Activity score
+        if waist < 90:
+            waist_pts = 0
+        elif 90 <= waist <= 99:
+            waist_pts = 10
+        else:
+            waist_pts = 20
+
     act = patient.physical_activity.lower()
-    if act == "vigorous": score += 0
-    elif act == "moderate": score += 10
-    elif act == "mild": score += 20
-    elif act == "sedentary": score += 30
-    
-    # Family history score
+    activity_pts = 0
+    if act == "vigorous":
+        activity_pts = 0
+    elif act == "moderate":
+        activity_pts = 10
+    elif act == "mild":
+        activity_pts = 20
+    elif act == "sedentary":
+        activity_pts = 30
+
     fam = patient.family_history_diabetes.lower()
-    if fam == "none": score += 0
-    elif fam == "one_parent": score += 10
-    elif fam == "both_parents": score += 20
-    
+    family_pts = 0
+    if fam == "none":
+        family_pts = 0
+    elif fam == "one_parent":
+        family_pts = 10
+    elif fam == "both_parents":
+        family_pts = 20
+
+    score = age_pts + waist_pts + activity_pts + family_pts
     response.risk_score = score
-    
+
     # Risk Category
     if score < 30:
         response.risk_category = "Low Risk"
@@ -71,14 +84,19 @@ def run_idrs_engine(patient: PatientData) -> EngineResponse:
         response.risk_category = "High Risk"
         response.referral_recommended = True
         response.referral_reason = "IDRS High Risk (>=60) requires referral if no prior diagnosis."
-        
+
     if response.risk_category in ["Moderate Risk", "High Risk"]:
         response.missing_inputs.append(MissingInvestigation(
             test_name="Fasting Capillary Blood Glucose and/or OGTT",
             reason=f"IDRS score is {score} ({response.risk_category}), indicating need for definitive glucose test.",
             guideline_citation="ICMR-INDIAB / MDRF-IDRS"
         ))
-        
-    response.extra_data["age_pts"] = score # Note: we could store individual points if requested by LLM payload
-    
+
+    # Correct per-component breakdown for LLM explainability payload
+    response.extra_data["age_pts"] = age_pts
+    response.extra_data["waist_pts"] = waist_pts
+    response.extra_data["activity_pts"] = activity_pts
+    response.extra_data["family_pts"] = family_pts
+    response.extra_data["total"] = score
+
     return response

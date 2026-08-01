@@ -1,0 +1,397 @@
+/* ============================================================
+   TETRA010 — Clinical Decision Support UI
+   Design: dark glassmorphism, medical-grade color palette
+   ============================================================ */
+
+/* ---- Design tokens ---- */
+:root {
+  --bg:          #0a0e1a;
+  --surface:     #111827;
+  --surface-2:   #1a2235;
+  --border:      rgba(255,255,255,0.07);
+  --border-2:    rgba(255,255,255,0.12);
+  --text:        #e8edf5;
+  --text-2:      #8b9ab3;
+  --text-3:      #4a5568;
+
+  --accent:      #3b82f6;
+  --accent-glow: rgba(59,130,246,0.25);
+  --green:       #10b981;
+  --green-glow:  rgba(16,185,129,0.2);
+  --orange:      #f59e0b;
+  --orange-glow: rgba(245,158,11,0.2);
+  --red:         #ef4444;
+  --red-glow:    rgba(239,68,68,0.2);
+  --purple:      #8b5cf6;
+  --purple-glow: rgba(139,92,246,0.2);
+
+  --radius:      14px;
+  --radius-sm:   8px;
+  --font:        'Inter', -apple-system, sans-serif;
+  --shadow:      0 4px 24px rgba(0,0,0,0.4);
+  --shadow-lg:   0 8px 48px rgba(0,0,0,0.6);
+}
+
+/* ---- Reset ---- */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; scroll-behavior: smooth; }
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  line-height: 1.6;
+}
+
+/* ---- Scrollbar ---- */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--surface); }
+::-webkit-scrollbar-thumb { background: var(--border-2); border-radius: 99px; }
+
+/* ============================================================
+   HEADER
+   ============================================================ */
+.header {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(10,14,26,0.85);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  padding: 0.9rem 2rem;
+}
+.header-inner {
+  max-width: 1200px; margin: auto;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.logo { display: flex; align-items: center; gap: 0.75rem; }
+.logo-icon {
+  font-size: 1.6rem;
+  background: linear-gradient(135deg, var(--accent), var(--purple));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+.logo-title {
+  font-size: 1.2rem; font-weight: 800; letter-spacing: -0.5px;
+  background: linear-gradient(135deg, #fff 40%, #8b9ab3);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  display: block;
+}
+.logo-sub { font-size: 0.7rem; color: var(--text-2); letter-spacing: 0.5px; display: block; }
+.header-meta { display: flex; align-items: center; gap: 1rem; }
+.header-tagline { font-size: 0.75rem; color: var(--text-3); }
+
+/* ============================================================
+   BADGES
+   ============================================================ */
+.badge {
+  font-size: 0.7rem; font-weight: 600; padding: 0.2rem 0.6rem;
+  border-radius: 99px; letter-spacing: 0.3px;
+}
+.badge--green  { background: var(--green-glow);  color: var(--green);  border: 1px solid rgba(16,185,129,0.3); }
+.badge--orange { background: var(--orange-glow); color: var(--orange); border: 1px solid rgba(245,158,11,0.3); }
+.badge--blue   { background: var(--accent-glow); color: var(--accent); border: 1px solid rgba(59,130,246,0.3); }
+.badge--red    { background: var(--red-glow);    color: var(--red);    border: 1px solid rgba(239,68,68,0.3); }
+
+/* ============================================================
+   MAIN LAYOUT
+   ============================================================ */
+.main {
+  max-width: 1200px; margin: 0 auto;
+  padding: 2rem 1.5rem 4rem;
+}
+
+/* ============================================================
+   CARDS
+   ============================================================ */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+.card-header {
+  padding: 1.4rem 1.75rem 0;
+}
+.card-title {
+  font-size: 1.05rem; font-weight: 700;
+  display: flex; align-items: center; gap: 0.5rem;
+}
+.card-title .icon { font-size: 1.1rem; }
+.card-desc { font-size: 0.85rem; color: var(--text-2); margin-top: 0.35rem; }
+
+/* ============================================================
+   FORM
+   ============================================================ */
+.form-card { margin-bottom: 2rem; }
+.form-card .card-header { padding-bottom: 0.5rem; }
+
+form { padding: 1rem 1.75rem 1.75rem; }
+
+.form-group {
+  border: none;
+  background: var(--surface-2);
+  border-radius: var(--radius-sm);
+  padding: 1.2rem;
+  margin-top: 1rem;
+}
+.group-label {
+  font-size: 0.78rem; font-weight: 700; letter-spacing: 0.8px;
+  text-transform: uppercase; color: var(--text-2);
+  display: flex; align-items: center; gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+.group-badge {
+  font-size: 0.65rem; font-weight: 600; padding: 0.15rem 0.5rem;
+  background: var(--accent-glow); color: var(--accent);
+  border-radius: 99px; text-transform: none;
+}
+
+.grid-2 { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px,1fr)); gap: 0.85rem; }
+.grid-3 { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px,1fr)); gap: 0.85rem; }
+
+.field { display: flex; flex-direction: column; gap: 0.3rem; }
+.field label {
+  font-size: 0.8rem; font-weight: 600; color: var(--text-2);
+}
+.field input, .field select {
+  background: var(--bg);
+  border: 1px solid var(--border-2);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  font-family: var(--font); font-size: 0.9rem;
+  padding: 0.55rem 0.75rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  width: 100%;
+}
+.field input:focus, .field select:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-glow);
+}
+.field select option { background: var(--surface-2); }
+.field-note { font-size: 0.7rem; color: var(--text-3); }
+
+.form-actions {
+  display: flex; gap: 0.75rem; margin-top: 1.5rem;
+  flex-wrap: wrap;
+}
+
+/* ============================================================
+   BUTTONS
+   ============================================================ */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+  font-family: var(--font); font-size: 0.9rem; font-weight: 600;
+  padding: 0.7rem 1.5rem; border-radius: var(--radius-sm);
+  border: none; cursor: pointer; transition: all 0.2s;
+  position: relative; overflow: hidden;
+}
+.btn--primary {
+  background: linear-gradient(135deg, var(--accent) 0%, #6366f1 100%);
+  color: #fff; box-shadow: 0 4px 20px var(--accent-glow);
+}
+.btn--primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 28px var(--accent-glow);
+}
+.btn--primary:active { transform: translateY(0); }
+.btn--ghost {
+  background: transparent; color: var(--text-2);
+  border: 1px solid var(--border-2);
+}
+.btn--ghost:hover { background: var(--surface-2); color: var(--text); }
+
+.btn.loading .btn-text { opacity: 0; }
+.btn.loading .btn-loader {
+  display: inline-block;
+  width: 16px; height: 16px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  position: absolute;
+}
+.btn-loader { display: none; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ============================================================
+   REFERRAL BANNER
+   ============================================================ */
+.referral-banner {
+  display: flex; align-items: flex-start; gap: 1rem;
+  background: rgba(239,68,68,0.1);
+  border: 1px solid rgba(239,68,68,0.35);
+  border-radius: var(--radius);
+  padding: 1.2rem 1.5rem;
+  margin-bottom: 1.5rem;
+  animation: slideDown 0.3s ease;
+}
+@keyframes slideDown { from { opacity:0; transform: translateY(-8px); } to { opacity:1; transform: translateY(0); } }
+.referral-icon { font-size: 2rem; line-height: 1; }
+.referral-title { font-size: 1rem; font-weight: 700; color: var(--red); margin-bottom: 0.4rem; }
+.referral-list { list-style: none; padding: 0; }
+.referral-list li {
+  font-size: 0.85rem; color: #fca5a5;
+  padding: 0.2rem 0; padding-left: 1rem;
+  position: relative;
+}
+.referral-list li::before { content: '→'; position: absolute; left: 0; color: var(--red); }
+
+/* ============================================================
+   GAUGE GRID
+   ============================================================ */
+.gauges-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1rem; margin-bottom: 1.5rem;
+}
+.gauge-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.4rem 1rem 1rem;
+  display: flex; flex-direction: column; align-items: center;
+  text-align: center;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.gauge-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+.gauge-label { font-size: 0.95rem; font-weight: 700; }
+.gauge-sub { font-size: 0.65rem; color: var(--text-3); margin-bottom: 0.75rem; letter-spacing: 0.4px; }
+
+.gauge-ring-wrap {
+  position: relative; width: 110px; height: 110px;
+  margin-bottom: 0.75rem;
+}
+.gauge-ring { width: 100%; height: 100%; transform: rotate(-90deg); }
+.gauge-track {
+  fill: none; stroke: rgba(255,255,255,0.06);
+  stroke-width: 10;
+}
+.gauge-fill {
+  fill: none; stroke: var(--accent);
+  stroke-width: 10; stroke-linecap: round;
+  stroke-dasharray: 251.2; stroke-dashoffset: 251.2;
+  transition: stroke-dashoffset 0.8s cubic-bezier(0.4,0,0.2,1), stroke 0.4s;
+}
+.gauge-center {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+}
+.gauge-score { font-size: 1.4rem; font-weight: 800; line-height: 1; }
+.gauge-unit { font-size: 0.65rem; color: var(--text-2); }
+.gauge-category {
+  font-size: 0.78rem; font-weight: 600;
+  padding: 0.25rem 0.7rem;
+  border-radius: 99px;
+  background: var(--surface-2);
+  color: var(--text-2);
+  transition: background 0.3s, color 0.3s;
+}
+
+/* Gauge risk color states */
+.gauge-card.risk-low    .gauge-fill { stroke: var(--green); }
+.gauge-card.risk-low    .gauge-category { background: var(--green-glow); color: var(--green); }
+.gauge-card.risk-mod    .gauge-fill { stroke: var(--orange); }
+.gauge-card.risk-mod    .gauge-category { background: var(--orange-glow); color: var(--orange); }
+.gauge-card.risk-high   .gauge-fill { stroke: var(--red); }
+.gauge-card.risk-high   .gauge-category { background: var(--red-glow); color: var(--red); }
+.gauge-card.risk-vhigh  .gauge-fill { stroke: var(--purple); }
+.gauge-card.risk-vhigh  .gauge-category { background: var(--purple-glow); color: var(--purple); }
+.gauge-card.risk-na     .gauge-fill { stroke: var(--text-3); }
+
+/* ============================================================
+   DETAIL ROW
+   ============================================================ */
+.detail-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem; margin-bottom: 1rem;
+}
+@media (max-width: 640px) { .detail-row { grid-template-columns: 1fr; } }
+
+.detail-card { padding: 1.4rem 1.75rem; }
+.detail-card--wide { padding: 1.4rem 1.75rem; margin-bottom: 1rem; }
+
+.missing-list { list-style: none; padding: 0; margin-top: 0.75rem; }
+.missing-list li {
+  display: flex; flex-direction: column;
+  border-bottom: 1px solid var(--border);
+  padding: 0.7rem 0;
+}
+.missing-list li:last-child { border-bottom: none; }
+.missing-test { font-size: 0.9rem; font-weight: 600; color: var(--orange); }
+.missing-reason { font-size: 0.78rem; color: var(--text-2); margin-top: 0.2rem; }
+.missing-citation {
+  font-size: 0.7rem; color: var(--text-3);
+  margin-top: 0.15rem;
+  font-style: italic;
+}
+.empty-msg { font-size: 0.85rem; color: var(--text-3); margin-top: 0.75rem; }
+
+.detail-content {
+  font-size: 0.875rem; color: var(--text-2);
+  margin-top: 0.75rem; line-height: 1.7;
+}
+.detail-content strong { color: var(--text); }
+.detail-row-item {
+  display: flex; flex-direction: column; gap: 0.15rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--border);
+}
+.detail-row-item:last-child { border-bottom: none; }
+.detail-key { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.6px; color: var(--text-3); font-weight: 600; }
+.detail-val { font-size: 0.9rem; color: var(--text); font-weight: 500; }
+
+/* ============================================================
+   LLM CARD
+   ============================================================ */
+.llm-card { margin-bottom: 1.5rem; }
+.llm-body { padding: 1.25rem 1.75rem 1.75rem; }
+.llm-placeholder, .llm-disabled {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 0.75rem; padding: 2rem; text-align: center;
+  color: var(--text-2); font-size: 0.88rem;
+}
+.llm-disabled code {
+  background: var(--surface-2); padding: 0.15rem 0.4rem;
+  border-radius: 4px; font-size: 0.8rem; color: var(--orange);
+}
+.spinner {
+  width: 28px; height: 28px;
+  border: 2px solid var(--border-2);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+.llm-text {
+  font-size: 0.9rem; color: var(--text-2); line-height: 1.8;
+  white-space: pre-wrap;
+}
+.llm-text strong { color: var(--text); }
+
+/* ============================================================
+   RESULTS ACTIONS
+   ============================================================ */
+.results-actions { display: flex; justify-content: flex-start; margin-top: 0.5rem; }
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+.footer {
+  text-align: center;
+  padding: 2rem 1.5rem;
+  border-top: 1px solid var(--border);
+  font-size: 0.75rem; color: var(--text-3); line-height: 1.8;
+}
+.footer strong { color: var(--text-2); }
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 480px) {
+  .main { padding: 1rem 0.75rem 3rem; }
+  .form-group { padding: 1rem; }
+  form { padding: 0.75rem 1rem 1rem; }
+  .gauges-grid { grid-template-columns: 1fr 1fr; }
+  .header { padding: 0.75rem 1rem; }
+  .header-tagline { display: none; }
+}

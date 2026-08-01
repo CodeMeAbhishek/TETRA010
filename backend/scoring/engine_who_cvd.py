@@ -106,12 +106,14 @@ def run_who_cvd_engine(patient: PatientData) -> EngineResponse:
             ))
         
     if response.risk_percentage:
+        # risk_percentage may be a plain value ("10%") or a range ("10-20%").
+        # Use the lower bound (first integer) for the referral threshold check.
         try:
-            risk_val = int(response.risk_percentage.replace("%", ""))
-            if risk_val >= 20:
+            lower_bound = int(response.risk_percentage.replace("%", "").split("-")[0].strip())
+            if lower_bound >= 20:
                 response.referral_recommended = True
                 response.referral_reason = f"WHO CVD risk is {response.risk_percentage} (Threshold >=20%)"
-        except ValueError:
+        except (ValueError, IndexError):
             pass
             
     return response
