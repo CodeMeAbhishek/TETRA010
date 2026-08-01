@@ -1,40 +1,59 @@
-# AI-Powered Lifestyle Disease Risk Prediction & Early Referral Assistant
+# TETRA010: Clinical Decision Support System
 
 **Track A / HealthTech Problem Statement 1**
 
-Welcome to our project! This repository houses an offline-capable, deterministic, rule-based clinical decision support assistant designed to identify and stratify risk for lifestyle diseases in low-resource and primary healthcare (PHC) settings.
+This repository contains a clinical decision support system for primary healthcare. It identifies the risk of lifestyle diseases. The system operates locally and uses a deterministic rules engine. 
 
-## 🎯 The Core Problem
-Healthcare workers in low-resource settings often lack the immediate clinical tools to rapidly identify undiagnosed lifestyle diseases. Our solution takes patient data (demographics, symptoms, vitals, history, and available labs) and automatically computes risk, flags missing tests, and recommends referrals based on globally recognized medical guidelines.
+## 1. The Core Problem
+Healthcare workers in low-resource settings need tools to identify undiagnosed diseases. Our software uses patient data to calculate risk, identify missing tests, and recommend referrals. The calculations follow established medical guidelines.
 
-## 🏗️ The Golden Rule of our Architecture
-**The LLM never computes a clinical score. Ever.**
+## 2. System Architecture
+**The Large Language Model (LLM) never calculates a clinical score.**
 
-To ensure 100% medical accuracy, reliability, and trust from clinical evaluators, our architecture strictly separates risk calculation from AI explanation:
-1. **The Rule-Based Clinical Scoring Engine**: A suite of pure, deterministic Python functions that calculate risk based strictly on verified medical guidelines (no LLM hallucination).
-2. **The LLM Orchestration Layer**: The LLM sits *on top* of the scoring engine. It receives structured JSON data and uses its natural language capabilities to explain the score to the patient (in multiple languages), draft referral notes, and personalize education.
+The architecture has two distinct layers to ensure medical accuracy:
+1. **The Rule-Based Clinical Scoring Engine**: Python functions calculate risk. These functions strictly follow medical guidelines. 
+2. **The LLM Orchestration Layer**: The LLM receives the calculated scores as structured JSON data. It translates these scores into patient-friendly explanations in multiple languages. It also generates referral notes.
 
 ## 🧠 Supported Clinical Modules
+
 Our scoring engine currently evaluates 5 major conditions using verified guidelines:
-1. **Diabetes (MDRF-IDRS)**: Uses the Indian Diabetes Risk Score tailored for the Asian Indian phenotype (strongly weighting waist circumference).
-2. **Cardiovascular Disease (WHO-CVD)**: Uses digitized WHO South Asia Risk Charts (both lab-based and BMI-fallback non-lab charts).
-3. **Hypertension (2017 ACC/AHA)**: Categorizes blood pressure and dictates complex treatment timelines.
-4. **Chronic Kidney Disease (KDIGO)**: Computes eGFR via the CKD-EPI 2021 equation and stratifies risk across the KDIGO G×A Heatmap.
-5. **Stroke**: Integrated via the ACC/AHA acute stroke protocols and secondary prevention guidelines.
 
-## 🗂️ Project Structure
-* `/backend/scoring/`: The deterministic clinical engines, missing investigations aggregator, and referral decision engine.
-* `/backend/orchestrator.py`: The bridge that securely passes structured clinical data to the LLM.
-* `/references/`: Source-of-truth medical guidelines, source images, and research papers used to build the logic.
-* `test_engines.py`: Our exhaustive test suite (currently at 86% coverage) validating the clinical logic against edge cases.
+- **Diabetes (MDRF-IDRS)**: Uses the Indian Diabetes Risk Score tailored for the Asian Indian phenotype (strongly weighting waist circumference).
+- **Cardiovascular Disease (WHO-CVD)**: Uses digitized WHO South Asia Risk Charts (both lab-based and BMI-fallback non-lab charts).
+- **Hypertension (2017 ACC/AHA)**: Categorizes blood pressure and dictates complex treatment timelines.
+- **Chronic Kidney Disease (KDIGO)**: Computes eGFR via the CKD-EPI 2021 equation and stratifies risk across the KDIGO G×A Heatmap.
+- **Stroke**: Integrated via the ACC/AHA acute stroke protocols and secondary prevention guidelines.
 
-## 🚀 How to Run Tests
-The clinical engines are thoroughly unit-tested to ensure perfect alignment with medical guidelines.
+## 3. Project Structure
+- `/backend/scoring/`: The clinical engines, missing investigations aggregator, and referral decision engine.
+- `/backend/api.py`: The FastAPI server.
+- `/backend/orchestrator.py`: The integration layer for the LLM API.
+- `/frontend/`: The user interface (HTML, CSS, JavaScript).
+- `/references/`: The medical guidelines and source documents.
+- `test_engines.py`: The unit test suite.
+
+## 4. How to Run the Application
+1. **Install dependencies:**
+   ```bash
+   pip install fastapi uvicorn pydantic openai python-dotenv
+   ```
+2. **Configure the API key:**
+   Copy `.env.example` to `.env` and add your NVIDIA NIM or OpenRouter API key.
+3. **Start the server:**
+   ```bash
+   python main.py
+   ```
+4. **Access the application:**
+   Open a web browser and go to `http://localhost:8000/`.
+
+## 5. How to Run Tests
+The clinical engines use unit tests to ensure alignment with medical guidelines.
 ```bash
-python -m unittest test_engines.py
+python -m unittest test_engines.py -v
 ```
 
 ## 📚 Clinical References & Sources
+
 The logic in this engine is strictly built upon verified medical guidelines. The source documents and validation papers are stored locally in the `/references/` directory.
 
 - **Diabetes (MDRF-IDRS):**
@@ -53,4 +72,3 @@ The logic in this engine is strictly built upon verified medical guidelines. The
   - *Source:* KDIGO 2012 / 2024 Clinical Practice Guideline for the Evaluation and Management of Chronic Kidney Disease.
   - *Web Link:* [KDIGO CKD Guidelines Heatmap](https://kdigo.org/heat-map/)
   - *Local File:* `/references/kdigo_ckd_epi_formula.md` and KDIGO heatmaps (`/references/kdigo_heatmap (1).png`)
-
