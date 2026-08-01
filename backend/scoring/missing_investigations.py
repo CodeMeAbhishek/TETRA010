@@ -1,5 +1,5 @@
 from typing import List, Dict
-from models import MissingInvestigation
+from backend.scoring.models import MissingInvestigation
 
 def aggregate_missing_investigations(engine_responses: List['EngineResponse']) -> List[dict]:
     """

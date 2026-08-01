@@ -1,0 +1,32 @@
+{
+    "G1": {
+        "A1": "Green",
+        "A2": "Yellow",
+        "A3": "Orange"
+    },
+    "G2": {
+        "A1": "Green",
+        "A2": "Yellow",
+        "A3": "Orange"
+    },
+    "G3a": {
+        "A1": "Yellow",
+        "A2": "Orange",
+        "A3": "Red"
+    },
+    "G3b": {
+        "A1": "Orange",
+        "A2": "Red",
+        "A3": "Red"
+    },
+    "G4": {
+        "A1": "Orange",
+        "A2": "Red",
+        "A3": "Red"
+    },
+    "G5": {
+        "A1": "Red",
+        "A2": "Red",
+        "A3": "Red"
+    }
+}

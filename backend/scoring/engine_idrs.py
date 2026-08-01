@@ -1,4 +1,4 @@
-from models import PatientData, EngineResponse, MissingInvestigation
+from backend.scoring.models import PatientData, EngineResponse, MissingInvestigation
 
 def run_idrs_engine(patient: PatientData) -> EngineResponse:
     response = EngineResponse()

@@ -1,4 +1,4 @@
-from models import PatientData, EngineResponse, MissingInvestigation
+from backend.scoring.models import PatientData, EngineResponse, MissingInvestigation
 
 def run_htn_engine(patient: PatientData, is_newly_diagnosed: bool = False, ckd_stage: str = None, ckd_acr: float = None) -> EngineResponse:
     response = EngineResponse()

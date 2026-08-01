@@ -1,12 +1,12 @@
 import json
 from typing import Dict, List
-from models import PatientData, EngineResponse
-from engine_idrs import run_idrs_engine
-from engine_who_cvd import run_who_cvd_engine
-from engine_htn import run_htn_engine
-from engine_ckd import run_ckd_engine
-from missing_investigations import aggregate_missing_investigations
-from referral_engine import determine_referral
+from backend.scoring.models import PatientData, EngineResponse
+from backend.scoring.engine_idrs import run_idrs_engine
+from backend.scoring.engine_who_cvd import run_who_cvd_engine
+from backend.scoring.engine_htn import run_htn_engine
+from backend.scoring.engine_ckd import run_ckd_engine
+from backend.scoring.missing_investigations import aggregate_missing_investigations
+from backend.scoring.referral_engine import determine_referral
 
 def run_all_engines(patient: PatientData, is_newly_diagnosed_htn: bool = False) -> Dict[str, dict]:
     """

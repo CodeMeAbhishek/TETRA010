@@ -1,4 +1,13 @@
-from models import PatientData, EngineResponse, MissingInvestigation
+import json
+import os
+from backend.scoring.models import PatientData, EngineResponse, MissingInvestigation
+
+def load_kdigo_grid() -> dict:
+    grid_path = os.path.join(os.path.dirname(__file__), "kdigo_ckd_grid.json")
+    with open(grid_path, "r") as f:
+        return json.load(f)
+
+KDIGO_GRID = load_kdigo_grid()
 
 def calculate_egfr(scr: float, age: int, sex: str) -> float:
     k = 0.7 if sex == "female" else 0.9
@@ -23,15 +32,7 @@ def get_a_stage(acr: float) -> str:
     return "A3"
 
 def get_kdigo_risk(g_stage: str, a_stage: str) -> str:
-    grid = {
-        "G1": {"A1": "Green", "A2": "Yellow", "A3": "Orange"},
-        "G2": {"A1": "Green", "A2": "Yellow", "A3": "Orange"},
-        "G3a": {"A1": "Yellow", "A2": "Orange", "A3": "Red"},
-        "G3b": {"A1": "Orange", "A2": "Red", "A3": "Red"},
-        "G4": {"A1": "Red", "A2": "Red", "A3": "Red"},
-        "G5": {"A1": "Red", "A2": "Red", "A3": "Red"},
-    }
-    return grid.get(g_stage, {}).get(a_stage, "Unknown")
+    return KDIGO_GRID.get(g_stage, {}).get(a_stage, "Unknown")
 
 def run_ckd_engine(patient: PatientData, htn_category: str = None, idrs_category: str = None) -> EngineResponse:
     response = EngineResponse()

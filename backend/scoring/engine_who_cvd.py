@@ -1,6 +1,6 @@
 import json
 import os
-from models import PatientData, EngineResponse, MissingInvestigation
+from backend.scoring.models import PatientData, EngineResponse, MissingInvestigation
 
 def load_who_cvd_charts() -> dict:
     chart_path = os.path.join(os.path.dirname(__file__), "who_cvd_charts.json")
