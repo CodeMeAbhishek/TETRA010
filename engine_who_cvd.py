@@ -38,7 +38,7 @@ def get_bmi_band(bmi: float) -> str:
     if bmi < 20: return "<20"
     if bmi < 25: return "20-24"
     if bmi < 30: return "25-29"
-    if bmi < 35: return "30-34"
+    if bmi < 35: return "30-35"
     return ">=35"
 
 def run_who_cvd_engine(patient: PatientData) -> EngineResponse:
@@ -54,8 +54,6 @@ def run_who_cvd_engine(patient: PatientData) -> EngineResponse:
         missing.append(MissingInvestigation("Smoking Status", "Required for WHO CVD risk calculation", "WHO CVD Guidelines"))
     if patient.systolic_bp is None:
         missing.append(MissingInvestigation("Systolic BP", "Required for WHO CVD risk calculation", "WHO CVD Guidelines"))
-    if patient.has_diabetes is None:
-        missing.append(MissingInvestigation("Diabetes Status", "Required for WHO CVD risk calculation", "WHO CVD Guidelines"))
         
     if missing:
         response.missing_inputs.extend(missing)
@@ -72,7 +70,7 @@ def run_who_cvd_engine(patient: PatientData) -> EngineResponse:
     sex_key = patient.sex
     
     # Decide which chart
-    if patient.total_cholesterol_mmol_L is not None:
+    if patient.total_cholesterol_mmol_L is not None and patient.has_diabetes is not None:
         chart_type = "lab_based"
         chol_band = get_chol_band(patient.total_cholesterol_mmol_L)
         try:
@@ -82,20 +80,30 @@ def run_who_cvd_engine(patient: PatientData) -> EngineResponse:
         except KeyError:
             response.extra_data["error"] = "Error looking up lab-based risk."
     elif patient.bmi is not None:
-        chart_type = "non_lab_based"
         bmi_band = get_bmi_band(patient.bmi)
+        if not bmi_band:
+            response.extra_data["error"] = "BMI missing or out of bounds."
+            return response
+            
         try:
-            risk = CHARTS["non_lab_based"][diabetes_key][sex_key][smoker_key][age_band][sbp_band][bmi_band]
+            risk = CHARTS["non_lab_based"][sex_key][smoker_key][age_band][sbp_band][bmi_band]
             response.risk_percentage = risk
             response.extra_data["chart_used"] = "non_lab_based"
         except KeyError:
             response.extra_data["error"] = "Error looking up non-lab-based risk."
     else:
-        response.missing_inputs.append(MissingInvestigation(
-            "Lipid Panel or BMI", 
-            "BMI or lipid panel required to calculate WHO CVD Risk", 
-            "WHO CVD Guidelines"
-        ))
+        if patient.total_cholesterol_mmol_L is not None and patient.has_diabetes is None:
+            response.missing_inputs.append(MissingInvestigation(
+                "Diabetes Status", 
+                "Required alongside Cholesterol to use the lab-based WHO CVD chart. (BMI also missing for fallback).", 
+                "WHO CVD Guidelines"
+            ))
+        else:
+            response.missing_inputs.append(MissingInvestigation(
+                "Lipid Panel or BMI", 
+                "BMI or lipid panel required to calculate WHO CVD Risk", 
+                "WHO CVD Guidelines"
+            ))
         
     if response.risk_percentage:
         try:

@@ -111,18 +111,12 @@ def parse_charts():
     age_bands = ["70-74", "65-69", "60-64", "55-59", "50-54", "45-49", "40-44"]
     sbp_bands = [">=180", "160-179", "140-159", "120-139", "<120"]
     chol_bands = ["<4", "4-4.9", "5-5.9", "6-6.9", ">=7"]
-    bmi_bands = ["<20", "20-24", "25-29", "30-34", ">=35"]
+    bmi_bands = ["<20", "20-24", "25-29", "30-35", ">=35"]
     
     for d in ["diabetes_no", "diabetes_yes"]:
         data["lab_based"][d] = {"male": {"non_smoker": {}, "smoker": {}}, "female": {"non_smoker": {}, "smoker": {}}}
-        # Note: Non-lab chart doesn't have diabetes specific columns explicitly?
-        # WAIT! Let me look at south-asia-2.png. 
-        # Ah, south-asia-2.png does not have a "People with Diabetes" half!!
-        # Let me double check the image. Yes! It's just one block for "Non-laboratory based risk chart".
-        # This implies it applies regardless of diabetes, or it doesn't account for diabetes.
-        # But wait, WHO non-lab chart doesn't use diabetes? No, let's keep the structure but copy the same data if it doesn't have it, or just use a single structure.
-        # I'll populate the non_lab_based in a similar way, duplicating for diabetes_yes/no to keep the interface simple.
-        data["non_lab_based"][d] = {"male": {"non_smoker": {}, "smoker": {}}, "female": {"non_smoker": {}, "smoker": {}}}
+    
+    data["non_lab_based"] = {"male": {"non_smoker": {}, "smoker": {}}, "female": {"non_smoker": {}, "smoker": {}}}
 
     # Parse Lab Based
     lines = [l for l in raw_lab_data.split('\n') if l.strip()]
@@ -198,13 +192,12 @@ def parse_charts():
         w_s = nums[15:20]
         
         def assign_nl(sex_key, smoker_key, bmi_arr):
-            for dm_key in ["diabetes_no", "diabetes_yes"]:
-                if age not in data["non_lab_based"][dm_key][sex_key][smoker_key]:
-                    data["non_lab_based"][dm_key][sex_key][smoker_key][age] = {}
-                if sbp not in data["non_lab_based"][dm_key][sex_key][smoker_key][age]:
-                    data["non_lab_based"][dm_key][sex_key][smoker_key][age][sbp] = {}
-                for i, val in enumerate(bmi_arr):
-                    data["non_lab_based"][dm_key][sex_key][smoker_key][age][sbp][bmi_bands[i]] = f"{val}%"
+            if age not in data["non_lab_based"][sex_key][smoker_key]:
+                data["non_lab_based"][sex_key][smoker_key][age] = {}
+            if sbp not in data["non_lab_based"][sex_key][smoker_key][age]:
+                data["non_lab_based"][sex_key][smoker_key][age][sbp] = {}
+            for i, val in enumerate(bmi_arr):
+                data["non_lab_based"][sex_key][smoker_key][age][sbp][bmi_bands[i]] = f"{val}%"
 
         assign_nl("male", "non_smoker", m_ns)
         assign_nl("male", "smoker", m_s)

@@ -42,6 +42,12 @@ class TestScoringEngines(unittest.TestCase):
         resp2 = run_who_cvd_engine(p2)
         self.assertEqual(resp2.extra_data["chart_used"], "non_lab_based")
         self.assertEqual(resp2.risk_percentage, "12%")
+        
+        # Test BMI gap fix (34.5 should map to 30-35, not fail)
+        p3 = PatientData(age=60, sex="male", is_smoker=True, systolic_bp=185, bmi=34.5)
+        resp3 = run_who_cvd_engine(p3)
+        self.assertEqual(resp3.extra_data["chart_used"], "non_lab_based")
+        self.assertEqual(resp3.risk_percentage, "29%")
 
     def test_htn_stage2(self):
         p = PatientData(systolic_bp=145, diastolic_bp=85)
