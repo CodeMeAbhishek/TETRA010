@@ -39,18 +39,18 @@ The logic in this engine is strictly built upon verified medical guidelines. The
 
 - **Diabetes (MDRF-IDRS):**
   - *Source:* Validated via the ICMR-INDIAB national study.
-  - *Web Link:* [MDRF-IDRS / ICMR-INDIAB Validation](https://pubmed.ncbi.nlm.nih.gov/21745422/)
+  - *Web Link:* [MDRF-IDRS / ICMR-INDIAB Validation](https://ijmr.org.in/evaluation-of-madras-diabetes-research-foundation-indian-diabetes-risk-score-in-detecting-undiagnosed-diabetes-in-the-indian-population-results-from-the-indian-council-of-medical-research-india-diabe/)
   - *Local File:* `/references/IDRS.txt` and `/references/Indian_Diabetes_Risk_Score_in_detecting_undiagnosed_diabetes_in_the_Indian_population.md`
 - **Cardiovascular Disease (WHO-CVD):**
   - *Source:* WHO CVD Risk Charts for South Asia (2019).
-  - *Web Link:* [WHO CVD Risk Chart Working Group](https://www.who.int/publications/i/item/9789241515986)
+  - *Web Link:* [WHO CVD Risk Chart Working Group](https://www.who.int/docs/default-source/cardiovascular-diseases/south-asia.pdf?sfvrsn=c5b0d9a32)
   - *Local File:* `/references/south-asia-1.png` (lab-based) and `/references/south-asia-2.png` (non-lab-based)
 - **Hypertension (ACC/AHA):**
   - *Source:* 2017 ACC/AHA Guideline for the Prevention, Detection, Evaluation, and Management of High Blood Pressure in Adults.
-  - *Web Link:* [AHA/ACC 2017 Guidelines](https://www.ahajournals.org/doi/10.1161/HYP.0000000000000065)
+  - *Web Link:* [AHA/ACC 2017 Guidelines](https://www.jacc.org/doi/10.1016/j.jacc.2017.11.006)
   - *Local File:* `/references/2017_ACC_AHA.txt`
 - **Chronic Kidney Disease (KDIGO):**
   - *Source:* KDIGO 2012 / 2024 Clinical Practice Guideline for the Evaluation and Management of Chronic Kidney Disease.
-  - *Web Link:* [KDIGO CKD Guidelines](https://kdigo.org/guidelines/ckd-evaluation-and-management/)
+  - *Web Link:* [KDIGO CKD Guidelines Heatmap](https://kdigo.org/heat-map/)
   - *Local File:* `/references/kdigo_ckd_epi_formula.md` and KDIGO heatmaps (`/references/kdigo_heatmap (1).png`)
 
