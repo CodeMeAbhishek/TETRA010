@@ -652,57 +652,6 @@ def slide9(prs):
     return sl
 
 
-def slide_p03(prs):
-    sl = blank_slide(prs)
-    fill_bg(sl, OFF_WHITE)
-    header_bar(sl, "Test Case P03: Multi-Condition High Risk", "10")
-    
-    # Text explanation on the left
-    rect(sl, Inches(0.35), Inches(1.15), Inches(4.5), Inches(5.85), fill=WHITE, line=RISK_RED, lw=Pt(1.5))
-    txt(sl, "High Risk Scenario Profile", Inches(0.55), Inches(1.3), Inches(4.1), Inches(0.4), size=Pt(14), bold=True, color=SLATE_900)
-    txt(sl, "• Patient features:\n  - Age: 65, Male\n  - Waist: 102cm (IDRS high)\n  - SBP: 165 mmHg (HTN Stage 2)\n  - Lipids: Total Chol 6.2 mmol/L\n  - Creatinine: 1.8 mg/dL\n  - Urine ACR: 45 mg/g (CKD G3b-A2)\n\n• Assessment Outcomes:\n  - CVD risk: 36% (Very High)\n  - IDRS: 80 (High Risk)\n  - HTN: Stage 2 Hypertension\n  - CKD: Orange (High Risk)\n\n• Referral Engine:\n  - Action: REFER (Urgent)\n  - Note drafts complete clinical justifications for the PCP.", 
-        Inches(0.55), Inches(1.85), Inches(4.1), Inches(5.0), size=Pt(11.5), color=SLATE_700)
-        
-    # Screenshot on the right
-    img_path = r"c:\NUV\Tetrathon\references\p03_results.png"
-    add_image(sl, img_path, Inches(5.1), Inches(1.15), Inches(7.8), Inches(5.85))
-    return sl
-
-
-def slide_p04(prs):
-    sl = blank_slide(prs)
-    fill_bg(sl, OFF_WHITE)
-    header_bar(sl, "Test Case P04: Missing Labs Fallback", "11")
-    
-    # Text explanation on the left
-    rect(sl, Inches(0.35), Inches(1.15), Inches(4.5), Inches(5.85), fill=WHITE, line=RISK_ORANGE, lw=Pt(1.5))
-    txt(sl, "Graceful Degradation Profile", Inches(0.55), Inches(1.3), Inches(4.1), Inches(0.4), size=Pt(14), bold=True, color=SLATE_900)
-    txt(sl, "• Patient features:\n  - Age: 55, Female\n  - Waist: 95cm\n  - SBP: 135 mmHg\n  - Lipids: MISSING (No labs)\n  - BMI: 28.5 (Fallback input)\n\n• Assessment Outcomes:\n  - CVD: Automatically uses BMI non-lab chart. Calculated risk: 8%.\n  - HTN: Stage 1 Hypertension\n\n• Required Investigations:\n  - Aggregator flags Lipid Panel and Serum Creatinine as missing.\n  - Cites exact medical source.", 
-        Inches(0.55), Inches(1.85), Inches(4.1), Inches(5.0), size=Pt(11.5), color=SLATE_700)
-        
-    # Screenshot on the right
-    img_path = r"c:\NUV\Tetrathon\references\p04_results.png"
-    add_image(sl, img_path, Inches(5.1), Inches(1.15), Inches(7.8), Inches(5.85))
-    return sl
-
-
-def slide_p06(prs):
-    sl = blank_slide(prs)
-    fill_bg(sl, OFF_WHITE)
-    header_bar(sl, "Test Case P06: Healthy Baseline", "12")
-    
-    # Text explanation on the left
-    rect(sl, Inches(0.35), Inches(1.15), Inches(4.5), Inches(5.85), fill=WHITE, line=RISK_GREEN, lw=Pt(1.5))
-    txt(sl, "Healthy Patient Profile", Inches(0.55), Inches(1.3), Inches(4.1), Inches(0.4), size=Pt(14), bold=True, color=SLATE_900)
-    txt(sl, "• Patient features:\n  - Age: 35, Female\n  - Waist: 70cm\n  - Physical activity: Active\n  - SBP: 110, DBP: 75 mmHg\n  - No prior history\n\n• Assessment Outcomes:\n  - CVD risk: <1% (Low)\n  - IDRS: 0 (Low)\n  - HTN: Normal BP\n  - CKD: G1/A1 Green (Normal)\n\n• Referral Engine:\n  - Action: ROUTINE MONITORING\n  - Reassuring clinical communication in summary.", 
-        Inches(0.55), Inches(1.85), Inches(4.1), Inches(5.0), size=Pt(11.5), color=SLATE_700)
-        
-    # Screenshot on the right
-    img_path = r"c:\NUV\Tetrathon\references\p06_results.png"
-    add_image(sl, img_path, Inches(5.1), Inches(1.15), Inches(7.8), Inches(5.85))
-    return sl
-
-
 # ══════════════════════════════════════════════════════════════════════════════
 # MAIN
 # ══════════════════════════════════════════════════════════════════════════════
@@ -717,9 +666,6 @@ def main():
     slide7(prs)
     slide8(prs)
     slide9(prs)
-    slide_p03(prs)
-    slide_p04(prs)
-    slide_p06(prs)
 
     out = r"c:\NUV\Tetrathon\Nidan_TechDeck.pptx"
     prs.save(out)
@@ -728,3 +674,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
