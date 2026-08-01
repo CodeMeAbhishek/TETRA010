@@ -1,4 +1,4 @@
-# TETRA010: Clinical Decision Support System
+# Nidan: Clinical Decision Support System
 
 **Track A / HealthTech Problem Statement 1**
 

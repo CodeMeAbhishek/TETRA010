@@ -1,5 +1,5 @@
 """
-Entry point to run the TETRA010 FastAPI server.
+Entry point to run the Nidan FastAPI server.
 Usage: python main.py
 """
 import uvicorn

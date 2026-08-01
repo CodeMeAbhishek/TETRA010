@@ -1,5 +1,5 @@
 """
-FastAPI REST layer for the TETRA010 clinical decision support backend.
+FastAPI REST layer for the Nidan clinical decision support backend.
 Single endpoint: POST /analyze
 Accepts PatientData-compatible JSON, returns structured clinical scores + LLM explanation.
 """
@@ -18,7 +18,7 @@ from backend.scoring.models import PatientData
 from backend.orchestrator import call_llm_orchestration
 
 app = FastAPI(
-    title="TETRA010 — Clinical Decision Support API",
+    title="Nidan — Clinical Decision Support API",
     description=(
         "Deterministic rule-based risk scoring for Diabetes (IDRS), Cardiovascular Disease "
         "(WHO-CVD South Asia), Hypertension (2017 ACC/AHA), and CKD (KDIGO). "
@@ -93,7 +93,7 @@ class AnalyzeRequest(BaseModel):
 
 @app.get("/health")
 def health_check():
-    return {"status": "ok", "service": "TETRA010 Clinical Decision Support API"}
+    return {"status": "ok", "service": "Nidan Clinical Decision Support API"}
 
 
 @app.post("/analyze")

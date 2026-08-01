@@ -1,5 +1,5 @@
 """
-TETRA010 — Rebuilt Technical Deck (v2)
+Nidan — Rebuilt Technical Deck (v2)
 Tighter, 9-slide deck focused on system design & architecture decisions.
 Embeds actual reference screenshots. Plain language, less medical jargon.
 Run: python build_pptx.py
@@ -148,7 +148,7 @@ def slide1(prs):
     badge(sl, "Track A  |  HealthTech  |  Problem Statement 1",
           Inches(0.4), Inches(0.5), Inches(5.8), Inches(0.42), bg=TEAL, size=Pt(11))
 
-    txt(sl, "TETRA010", Inches(0.4), Inches(1.2), Inches(8.5), Inches(1.5),
+    txt(sl, "Nidan", Inches(0.4), Inches(1.2), Inches(8.5), Inches(1.5),
         size=Pt(72), bold=True, color=WHITE)
     txt(sl, "Clinical Decision Support System",
         Inches(0.4), Inches(2.7), Inches(8.5), Inches(0.65),
@@ -667,7 +667,7 @@ def main():
     slide8(prs)
     slide9(prs)
 
-    out = r"c:\NUV\Tetrathon\TETRA010_TechDeck.pptx"
+    out = r"c:\NUV\Tetrathon\Nidan_TechDeck.pptx"
     prs.save(out)
     print(f"[OK] Saved: {out}")
     print(f"     Slides: {len(prs.slides)}")
