@@ -16,6 +16,7 @@ const newBtn         = document.getElementById('new-assessment-btn');
 const strokeTypeSelect = document.getElementById('acute_stroke_type');
 const strokeHoursField = document.getElementById('stroke-hours-field');
 const apiStatus        = document.getElementById('api-status');
+const demoBtn          = document.getElementById('demo-btn');
 
 // ============================================================
 // SHOW/HIDE STROKE HOURS FIELD
@@ -385,3 +386,29 @@ newBtn.addEventListener('click', () => {
   document.getElementById('llm-disabled').style.display    = 'none';
   window.scrollTo({ top: 0, behavior: 'smooth' });
 });
+
+// ============================================================
+// DEMO / SAMPLE TESTCASE
+// ============================================================
+if (demoBtn) {
+  demoBtn.addEventListener('click', () => {
+    document.getElementById('age').value = 55;
+    document.getElementById('sex').value = 'male';
+    document.getElementById('waist').value = 95;
+    document.getElementById('physical_activity').value = 'sedentary';
+    document.getElementById('family_history_diabetes').value = 'one_parent';
+    document.getElementById('has_diabetes').value = 'false';
+    document.getElementById('systolic_bp').value = 145;
+    document.getElementById('diastolic_bp').value = 90;
+    document.getElementById('is_smoker').value = 'true';
+    document.getElementById('total_cholesterol').value = 5.5;
+    document.getElementById('bmi').value = 28;
+    document.getElementById('known_cvd').value = 'false';
+    document.getElementById('newly_diagnosed_htn').value = 'false';
+    document.getElementById('serum_creatinine').value = 1.2;
+    document.getElementById('urine_acr').value = 45;
+    document.getElementById('prior_stroke').value = 'false';
+    document.getElementById('acute_stroke_type').value = '';
+    strokeHoursField.style.display = 'none';
+  });
+}

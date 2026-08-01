@@ -39,12 +39,18 @@ Our scoring engine currently evaluates 5 major conditions using verified guideli
    ```
 2. **Configure the API key:**
    Copy `.env.example` to `.env` and add your NVIDIA NIM or OpenRouter API key.
-3. **Start the server:**
+3. **Start the Backend API:**
    ```bash
    python main.py
    ```
-4. **Access the application:**
-   Open a web browser and go to `http://localhost:8000/`.
+   *The backend will run on `http://localhost:8000`.*
+4. **Start the Frontend UI:**
+   Open a new terminal and run:
+   ```bash
+   python -m http.server 8081 --directory frontend
+   ```
+5. **Access the Application:**
+   Open a web browser and go to `http://localhost:8081/`.
 
 ## 5. How to Run Tests
 The clinical engines use unit tests to ensure alignment with medical guidelines.

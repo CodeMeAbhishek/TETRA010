@@ -20,6 +20,13 @@ This document serves as the internal wiki for our team members. It tracks what w
 *   Moved all clinical logic into `/backend/scoring/` to keep the architecture clean.
 *   Achieved **86% Test Coverage**, including 100% coverage on the missing investigations and referral engines.
 
+**4. LLM API & REST Layer Fully Integrated**
+*   Wrapped the orchestrator in a **FastAPI** application (`main.py` & `/backend/api.py`).
+*   Integrated **NVIDIA NIM** and **OpenRouter** APIs to generate multilingual explanations using Llama 3.1 8B Instruct based purely on the deterministic JSON.
+
+**5. Frontend UI Built**
+*   Built a lightweight, responsive HTML/JS/CSS frontend in `/frontend/` providing a clinical dashboard, gauges, missing tests alerts, and LLM text display.
+
 ---
 
 ## ❓ Frequently Asked Questions (FAQs)
@@ -39,17 +46,8 @@ This document serves as the internal wiki for our team members. It tracks what w
 
 Now that the backend clinical scoring foundation is rock-solid, our next sprint focuses on integration and user experience.
 
-### 1. LLM API Integration (`orchestrator.py`)
-*   **Current State:** The orchestrator correctly packages all deterministic JSON into a prompt, but currently returns a mocked string (`"LLM Prompt successfully generated. Waiting for API integration."`).
-*   **Next Action:** Wire up the actual Claude API (or equivalent LLM). Ensure the system prompt successfully forces the LLM to output multilingual patient education and clinical referral notes based strictly on the JSON payload.
-
-### 2. Frontend / User Interface
-*   **Current State:** Backend only.
-*   **Next Action:** Build a mobile-friendly, lightweight web app (e.g., React, Streamlit, or Next.js) tailored for primary healthcare workers. 
-*   **Requirements:** Needs a simple form to input vitals/demographics, a dashboard to display the Risk Categories, a prominent alert for "Missing Investigations," and a button to generate the LLM explanation in local languages (Hindi/Gujarati).
-
-### 3. API / REST Layer
-*   **Next Action:** Wrap `orchestrator.py` in a FastAPI or Flask app so the frontend can submit JSON payloads (`PatientData`) via HTTP POST and receive the LLM response + Clinical JSON back.
-
-### 4. Edge-Case Validation
+### 1. Edge-Case Validation
 *   **Next Action:** Have a clinician or medical student on the team try to "break" the scoring logic by inputting contradictory edge cases. Add any discovered bugs as unit tests in `test_engines.py` and patch the engines.
+
+### 2. Live Testing & Deployment
+*   **Next Action:** Package the application into a Docker container for easier deployment, and conduct user testing with actual primary healthcare workers to evaluate the UX of the frontend dashboard.
