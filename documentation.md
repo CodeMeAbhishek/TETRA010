@@ -8,7 +8,7 @@ This document serves as the internal wiki for our team members. It tracks what w
 
 **1. Scoring Engines Fully Implemented & Tested**
 *   **WHO-CVD**: Digitized the South Asia lab and non-lab charts into JSON. We successfully resolved the `BMI 30-35` gap bug and flattened the non-lab structure to perfectly match the source images.
-*   **CKD (KDIGO)**: Implemented the CKD-EPI 2021 formula. We exhaustively verified all 18 permutations of the G×A heatmap against the official KDIGO source image (fixing standard G4+A1 and G3b+A2 mismatches).
+*   **CKD (KDIGO)**: Implemented the CKD-EPI 2021 formula. We exhaustively verified all permutations against the KDIGO 2024 Heatmap. Recently patched a critical edge-case floating point bug in G-stage boundary thresholds.
 *   **Hypertension**: Fully mapped the 2017 ACC/AHA guidelines, including deep coverage for Acute Stroke protocols (ICH vs Ischemic).
 *   **Diabetes**: Implemented the MDRF-IDRS score, correctly enforcing Waist Circumference as a mandatory input for the Asian Indian phenotype.
 
@@ -19,6 +19,7 @@ This document serves as the internal wiki for our team members. It tracks what w
 **3. Codebase Restructuring & Quality**
 *   Moved all clinical logic into `/backend/scoring/` to keep the architecture clean.
 *   Achieved **86% Test Coverage**, including 100% coverage on the missing investigations and referral engines.
+*   Created a `test_suite.py` and `synthetic_patients.json` library containing 10 rigorous clinical edge cases (e.g. elderly boundary values, acute stroke, complete missing labs) that automatically validate the entire pipeline from end-to-end.
 
 **4. LLM API & REST Layer Fully Integrated**
 *   Wrapped the orchestrator in a **FastAPI** application (`main.py` & `/backend/api.py`).
@@ -26,6 +27,7 @@ This document serves as the internal wiki for our team members. It tracks what w
 
 **5. Frontend UI Built**
 *   Built a lightweight, responsive HTML/JS/CSS frontend in `/frontend/` providing a clinical dashboard, gauges, missing tests alerts, and LLM text display.
+*   The UI includes a robust Demo Menu (`<select>`) that allows instantly loading the 10 synthetic test cases to rapidly demonstrate logical branching to stakeholders/judges.
 
 ---
 

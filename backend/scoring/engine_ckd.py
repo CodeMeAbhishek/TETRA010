@@ -20,15 +20,15 @@ def calculate_egfr(scr: float, age: int, sex: str) -> float:
 
 def get_g_stage(egfr: float) -> str:
     if egfr >= 90: return "G1"
-    if 60 <= egfr <= 89: return "G2"
-    if 45 <= egfr <= 59: return "G3a"
-    if 30 <= egfr <= 44: return "G3b"
-    if 15 <= egfr <= 29: return "G4"
+    if egfr >= 60: return "G2"
+    if egfr >= 45: return "G3a"
+    if egfr >= 30: return "G3b"
+    if egfr >= 15: return "G4"
     return "G5"
 
 def get_a_stage(acr: float) -> str:
     if acr < 30: return "A1"
-    if 30 <= acr <= 300: return "A2"
+    if acr <= 300: return "A2"
     return "A3"
 
 def get_kdigo_risk(g_stage: str, a_stage: str) -> str:

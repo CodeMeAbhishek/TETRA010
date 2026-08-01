@@ -16,7 +16,7 @@ const newBtn         = document.getElementById('new-assessment-btn');
 const strokeTypeSelect = document.getElementById('acute_stroke_type');
 const strokeHoursField = document.getElementById('stroke-hours-field');
 const apiStatus        = document.getElementById('api-status');
-const demoBtn          = document.getElementById('demo-btn');
+const demoSelect       = document.getElementById('demo-select');
 
 // ============================================================
 // SHOW/HIDE STROKE HOURS FIELD
@@ -126,14 +126,23 @@ function renderResults(data, language) {
 
   // ---- Referral banner ----
   const banner = document.getElementById('referral-banner');
+  const refIcon = document.getElementById('ref-icon');
+  const refTitle = document.getElementById('ref-title');
+  const list = document.getElementById('referral-reasons');
+
+  banner.style.display = 'flex';
   if (referral.referral_recommended) {
-    banner.style.display = 'flex';
-    const list = document.getElementById('referral-reasons');
-    list.innerHTML = referral.reasons
-      .map(r => `<li>${escHtml(r)}</li>`)
-      .join('');
+    banner.className = 'referral-banner ref-urgent';
+    refIcon.textContent = '🚨';
+    refTitle.textContent = 'Referral Recommended';
+    list.innerHTML = referral.reasons.map(r => `<li>${escHtml(r)}</li>`).join('');
+    list.style.display = 'block';
   } else {
-    banner.style.display = 'none';
+    banner.className = 'referral-banner ref-ok';
+    refIcon.textContent = '✓';
+    refTitle.textContent = 'Continue Routine Monitoring';
+    list.innerHTML = '';
+    list.style.display = 'none';
   }
 
   // ---- Gauges ----
@@ -171,25 +180,63 @@ function setGauge(cardId, arcId, percent, scoreText, categoryText, riskLevel) {
   const scoreEl    = document.getElementById(`${arcId.replace('-arc','-score')}`);
   const categoryEl = document.getElementById(`${arcId.replace('-arc','-category')}`);
 
-  const offset = CIRCUMFERENCE * (1 - Math.min(percent, 1));
-  arc.style.strokeDashoffset = offset;
-  scoreEl.textContent    = scoreText;
-  categoryEl.textContent = categoryText;
+  if (arc) {
+    const offset = CIRCUMFERENCE * (1 - Math.min(percent, 1));
+    arc.style.strokeDashoffset = offset;
+  }
+  if (scoreEl) scoreEl.textContent = scoreText;
+  if (categoryEl) categoryEl.textContent = categoryText;
 
-  card.className = `gauge-card risk-${riskLevel}`;
+  if (card) card.className = `gauge-card risk-${riskLevel}`;
 }
 
 function renderIDRS(idrs) {
+  const bar = document.getElementById('idrs-breakdown');
+  const labels = document.getElementById('idrs-breakdown-labels');
+
   if (!idrs.risk_score && idrs.risk_score !== 0) {
     setGauge('gauge-idrs', 'idrs-arc', 0, '—', 'No data', 'na');
+    if (bar) bar.style.display = 'none';
+    if (labels) labels.style.display = 'none';
     return;
   }
   const score   = idrs.risk_score;
   const cat     = idrs.risk_category || '—';
   const pct     = score / 100;
   const level   = cat.includes('High') ? 'high' : cat.includes('Moderate') ? 'mod' : 'low';
-  document.getElementById('idrs-unit').textContent = '/100';
+  
+  const unitEl = document.getElementById('idrs-unit');
+  if (unitEl) unitEl.textContent = '/100 points';
+  
   setGauge('gauge-idrs', 'idrs-arc', pct, score, cat, level);
+
+  // Explainability Breakdown
+  if (idrs.extra_data && idrs.extra_data.total !== undefined) {
+    const d = idrs.extra_data;
+    const colors = ['#0f172a', '#475569', '#94a3b8', '#cbd5e1']; // Dark to light neutral
+    const parts = [
+      { k: 'Age', v: d.age_pts },
+      { k: 'Waist', v: d.waist_pts },
+      { k: 'Activity', v: d.activity_pts },
+      { k: 'Family', v: d.family_pts }
+    ];
+    
+    let barHtml = '';
+    let labelHtml = '';
+    parts.forEach((p, i) => {
+      const w = d.total === 0 ? 0 : (p.v / d.total) * 100;
+      if (w > 0) {
+        barHtml += `<div class="breakdown-segment" style="width:${w}%; background:${colors[i]}"></div>`;
+        labelHtml += `<div class="bl-item"><div class="bl-color" style="background:${colors[i]}"></div>${p.k}: ${p.v}</div>`;
+      }
+    });
+    
+    if (bar) { bar.innerHTML = barHtml; bar.style.display = 'flex'; }
+    if (labels) { labels.innerHTML = labelHtml; labels.style.display = 'flex'; }
+  } else {
+    if (bar) bar.style.display = 'none';
+    if (labels) labels.style.display = 'none';
+  }
 }
 
 function renderHTN(htn) {
@@ -346,10 +393,17 @@ function renderLLM(text, language) {
 }
 
 function formatLLMText(text) {
-  // Convert markdown-style bold (**text**) to <strong>
-  return escHtml(text)
+  let html = escHtml(text)
     .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
     .replace(/\n/g, '<br>');
+    
+  if (html.toLowerCase().includes('patient summary') && html.toLowerCase().includes('referral note')) {
+    // Basic heuristic to split the text into two distinct sections for typography
+    const parts = html.split(/Referral Note/i);
+    return `<div class="llm-section-patient">${parts[0]}</div>
+            <div class="llm-section-clinical"><strong>Referral Note</strong><br>${parts[1]}</div>`;
+  }
+  return html;
 }
 
 // ============================================================
@@ -388,27 +442,137 @@ newBtn.addEventListener('click', () => {
 });
 
 // ============================================================
-// DEMO / SAMPLE TESTCASE
+// DEMO / SAMPLE TESTCASES
 // ============================================================
-if (demoBtn) {
-  demoBtn.addEventListener('click', () => {
-    document.getElementById('age').value = 55;
-    document.getElementById('sex').value = 'male';
-    document.getElementById('waist').value = 95;
-    document.getElementById('physical_activity').value = 'sedentary';
-    document.getElementById('family_history_diabetes').value = 'one_parent';
-    document.getElementById('has_diabetes').value = 'false';
-    document.getElementById('systolic_bp').value = 145;
-    document.getElementById('diastolic_bp').value = 90;
-    document.getElementById('is_smoker').value = 'true';
-    document.getElementById('total_cholesterol').value = 5.5;
-    document.getElementById('bmi').value = 28;
-    document.getElementById('known_cvd').value = 'false';
-    document.getElementById('newly_diagnosed_htn').value = 'false';
-    document.getElementById('serum_creatinine').value = 1.2;
-    document.getElementById('urine_acr').value = 45;
-    document.getElementById('prior_stroke').value = 'false';
-    document.getElementById('acute_stroke_type').value = '';
-    strokeHoursField.style.display = 'none';
+const SYNTHETIC_PATIENTS = [
+    {
+      "id": "P01_low_risk_full_data",
+      "demographics": { "age": 32, "sex": "female" },
+      "diabetes": { "waist_circumference_cm": 74, "physical_activity": "vigorous", "family_history_diabetes": "none", "known_diabetes_diagnosis": "no" },
+      "cardio": { "systolic_bp": 112, "diastolic_bp": 72, "smoking_status": "non_smoker", "total_cholesterol_mmol_l": 3.8, "bmi": 21.5, "known_clinical_cvd": "no", "newly_diagnosed_htn": "no" },
+      "kidney": { "serum_creatinine_mg_dl": 0.7, "urine_acr_mg_g": 8 },
+      "stroke": { "prior_stroke_tia": "no", "acute_stroke_type": "none" }
+    },
+    {
+      "id": "P02_moderate_risk_full_data",
+      "demographics": { "age": 46, "sex": "male" },
+      "diabetes": { "waist_circumference_cm": 92, "physical_activity": "moderate", "family_history_diabetes": "one_parent", "known_diabetes_diagnosis": "no" },
+      "cardio": { "systolic_bp": 128, "diastolic_bp": 82, "smoking_status": "non_smoker", "total_cholesterol_mmol_l": 5.0, "bmi": 26.5, "known_clinical_cvd": "no", "newly_diagnosed_htn": "no" },
+      "kidney": { "serum_creatinine_mg_dl": 0.9, "urine_acr_mg_g": 22 },
+      "stroke": { "prior_stroke_tia": "no", "acute_stroke_type": "none" }
+    },
+    {
+      "id": "P03_high_risk_full_data",
+      "demographics": { "age": 55, "sex": "male" },
+      "diabetes": { "waist_circumference_cm": 95, "physical_activity": "sedentary", "family_history_diabetes": "one_parent", "known_diabetes_diagnosis": "no" },
+      "cardio": { "systolic_bp": 145, "diastolic_bp": 90, "smoking_status": "smoker", "total_cholesterol_mmol_l": 5.5, "bmi": 28.0, "known_clinical_cvd": "no", "newly_diagnosed_htn": "no" },
+      "kidney": { "serum_creatinine_mg_dl": 1.2, "urine_acr_mg_g": 45 },
+      "stroke": { "prior_stroke_tia": "no", "acute_stroke_type": "none" }
+    },
+    {
+      "id": "P04_missing_labs_moderate",
+      "demographics": { "age": 48, "sex": "female" },
+      "diabetes": { "waist_circumference_cm": 88, "physical_activity": "mild", "family_history_diabetes": "one_parent", "known_diabetes_diagnosis": "no" },
+      "cardio": { "systolic_bp": 134, "diastolic_bp": 86, "smoking_status": "non_smoker", "total_cholesterol_mmol_l": null, "bmi": 27.0, "known_clinical_cvd": "no", "newly_diagnosed_htn": "no" },
+      "kidney": { "serum_creatinine_mg_dl": null, "urine_acr_mg_g": null },
+      "stroke": { "prior_stroke_tia": "no", "acute_stroke_type": "none" }
+    },
+    {
+      "id": "P05_minimal_data_vitals_only",
+      "demographics": { "age": 51, "sex": "male" },
+      "diabetes": { "waist_circumference_cm": 101, "physical_activity": "sedentary", "family_history_diabetes": "both_parents", "known_diabetes_diagnosis": "no" },
+      "cardio": { "systolic_bp": 138, "diastolic_bp": 88, "smoking_status": "smoker", "total_cholesterol_mmol_l": null, "bmi": null, "known_clinical_cvd": "no", "newly_diagnosed_htn": "no" },
+      "kidney": { "serum_creatinine_mg_dl": null, "urine_acr_mg_g": null },
+      "stroke": { "prior_stroke_tia": "no", "acute_stroke_type": "none" }
+    },
+    {
+      "id": "P06_fully_normal",
+      "demographics": { "age": 29, "sex": "female" },
+      "diabetes": { "waist_circumference_cm": 70, "physical_activity": "vigorous", "family_history_diabetes": "none", "known_diabetes_diagnosis": "no" },
+      "cardio": { "systolic_bp": 108, "diastolic_bp": 70, "smoking_status": "non_smoker", "total_cholesterol_mmol_l": 3.5, "bmi": 20.5, "known_clinical_cvd": "no", "newly_diagnosed_htn": "no" },
+      "kidney": { "serum_creatinine_mg_dl": 0.6, "urine_acr_mg_g": 5 },
+      "stroke": { "prior_stroke_tia": "no", "acute_stroke_type": "none" }
+    },
+    {
+      "id": "P07_multi_comorbid_severe",
+      "demographics": { "age": 63, "sex": "male" },
+      "diabetes": { "waist_circumference_cm": 104, "physical_activity": "sedentary", "family_history_diabetes": "both_parents", "known_diabetes_diagnosis": "yes" },
+      "cardio": { "systolic_bp": 168, "diastolic_bp": 98, "smoking_status": "smoker", "total_cholesterol_mmol_l": 6.4, "bmi": 31.0, "known_clinical_cvd": "yes", "newly_diagnosed_htn": "no" },
+      "kidney": { "serum_creatinine_mg_dl": 2.1, "urine_acr_mg_g": 340 },
+      "stroke": { "prior_stroke_tia": "no", "acute_stroke_type": "none" }
+    },
+    {
+      "id": "P08_known_diabetes_diagnosis",
+      "demographics": { "age": 58, "sex": "female" },
+      "diabetes": { "waist_circumference_cm": 96, "physical_activity": "mild", "family_history_diabetes": "one_parent", "known_diabetes_diagnosis": "yes" },
+      "cardio": { "systolic_bp": 132, "diastolic_bp": 84, "smoking_status": "non_smoker", "total_cholesterol_mmol_l": 5.2, "bmi": 27.5, "known_clinical_cvd": "no", "newly_diagnosed_htn": "no" },
+      "kidney": { "serum_creatinine_mg_dl": 1.0, "urine_acr_mg_g": 35 },
+      "stroke": { "prior_stroke_tia": "no", "acute_stroke_type": "none" }
+    },
+    {
+      "id": "P09_acute_ischemic_stroke",
+      "demographics": { "age": 67, "sex": "male" },
+      "diabetes": { "waist_circumference_cm": 98, "physical_activity": "sedentary", "family_history_diabetes": "none", "known_diabetes_diagnosis": "no" },
+      "cardio": { "systolic_bp": 192, "diastolic_bp": 112, "smoking_status": "smoker", "total_cholesterol_mmol_l": 5.8, "bmi": 26.0, "known_clinical_cvd": "no", "newly_diagnosed_htn": "no" },
+      "kidney": { "serum_creatinine_mg_dl": 1.1, "urine_acr_mg_g": 18 },
+      "stroke": { "prior_stroke_tia": "yes", "acute_stroke_type": "acute_ischemic_tpa_eligible" }
+    },
+    {
+      "id": "P10_elderly_boundary_values",
+      "demographics": { "age": 70, "sex": "female" },
+      "diabetes": { "waist_circumference_cm": 91, "physical_activity": "mild", "family_history_diabetes": "one_parent", "known_diabetes_diagnosis": "no" },
+      "cardio": { "systolic_bp": 181, "diastolic_bp": 95, "smoking_status": "smoker", "total_cholesterol_mmol_l": null, "bmi": 34.6, "known_clinical_cvd": "no", "newly_diagnosed_htn": "no" },
+      "kidney": { "serum_creatinine_mg_dl": 1.3, "urine_acr_mg_g": 60 },
+      "stroke": { "prior_stroke_tia": "no", "acute_stroke_type": "none" }
+    }
+];
+
+if (demoSelect) {
+  demoSelect.addEventListener('change', (e) => {
+    const pId = e.target.value;
+    if (!pId) {
+      form.reset();
+      strokeHoursField.style.display = 'none';
+      return;
+    }
+    const p = SYNTHETIC_PATIENTS.find(x => x.id === pId);
+    if (!p) return;
+
+    document.getElementById('age').value = p.demographics.age || '';
+    document.getElementById('sex').value = p.demographics.sex || '';
+    document.getElementById('waist').value = p.diabetes.waist_circumference_cm || '';
+    document.getElementById('physical_activity').value = p.diabetes.physical_activity || '';
+    document.getElementById('family_history_diabetes').value = p.diabetes.family_history_diabetes || '';
+    
+    // UI expects true/false for some boolean selects
+    document.getElementById('has_diabetes').value = p.diabetes.known_diabetes_diagnosis === 'yes' ? 'true' : 'false';
+    
+    document.getElementById('systolic_bp').value = p.cardio.systolic_bp || '';
+    document.getElementById('diastolic_bp').value = p.cardio.diastolic_bp || '';
+    
+    // UI expects true/false for smoking select in some designs? Wait, let's check index.html.
+    // In index.html: <input type="checkbox" or <select> for is_smoker? Let me use what was in the original demo:
+    // document.getElementById('is_smoker').value = p.cardio.smoking_status === 'smoker' ? 'true' : 'false'; 
+    // Wait, let's look at the old demoBtn code to be exact.
+    const isSmokerEl = document.getElementById('is_smoker');
+    if (isSmokerEl) isSmokerEl.value = p.cardio.smoking_status === 'smoker' ? 'true' : 'false';
+    
+    const cholEl = document.getElementById('total_cholesterol');
+    if (cholEl) cholEl.value = p.cardio.total_cholesterol_mmol_l || '';
+    
+    document.getElementById('bmi').value = p.cardio.bmi || '';
+    
+    const cvdEl = document.getElementById('known_cvd');
+    if (cvdEl) cvdEl.value = p.cardio.known_clinical_cvd === 'yes' ? 'true' : 'false';
+    
+    document.getElementById('newly_diagnosed_htn').value = p.cardio.newly_diagnosed_htn === 'yes' ? 'true' : 'false';
+    
+    document.getElementById('serum_creatinine').value = p.kidney.serum_creatinine_mg_dl || '';
+    document.getElementById('urine_acr').value = p.kidney.urine_acr_mg_g || '';
+    
+    document.getElementById('prior_stroke').value = p.stroke.prior_stroke_tia === 'yes' ? 'true' : 'false';
+    document.getElementById('acute_stroke_type').value = p.stroke.acute_stroke_type === 'none' ? '' : p.stroke.acute_stroke_type;
+    
+    strokeHoursField.style.display = p.stroke.acute_stroke_type === 'ich' ? 'flex' : 'none';
   });
 }

@@ -7,7 +7,7 @@
   <meta name="description" content="AI-powered lifestyle disease risk prediction and early referral assistant for primary healthcare workers. Scores diabetes, hypertension, CKD, and cardiovascular risk using validated clinical guidelines." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -19,12 +19,12 @@
         <span class="logo-icon">⚕</span>
         <div>
           <span class="logo-title">TETRA010</span>
-          <span class="logo-sub">Clinical Decision Support</span>
+          <span class="logo-sub">Clinical Decision Support System</span>
         </div>
       </div>
       <div class="header-meta">
-        <span class="badge badge--green" id="api-status">● API Ready</span>
-        <span class="header-tagline">Powered by validated medical guidelines</span>
+        <span class="badge badge--green" id="api-status">API Ready</span>
+        <span class="header-tagline">Clinical logic strictly based on ICMR-INDIAB IDRS, WHO CVD, 2017 ACC/AHA, KDIGO 2024 / CKD-EPI 2021.</span>
       </div>
     </div>
   </header>
@@ -35,7 +35,7 @@
     <section class="card form-card" id="form-section" aria-label="Patient Data Entry">
       <div class="card-header">
         <h1 class="card-title">Patient Assessment</h1>
-        <p class="card-desc">Enter available data. All fields are optional — the engine degrades gracefully and flags missing tests.</p>
+        <p class="card-desc">Enter available data. All fields degrade gracefully. Missing critical values will flag as "Required Investigations".</p>
       </div>
 
       <form id="patient-form" novalidate>
@@ -45,11 +45,11 @@
           <legend class="group-label">Demographics</legend>
           <div class="grid-2">
             <div class="field">
-              <label for="age">Age (years)</label>
-              <input type="number" id="age" name="age" min="1" max="120" placeholder="e.g. 52" />
+              <label for="age">Age (years) <span class="req-marker">Required</span></label>
+              <input type="number" id="age" name="age" min="1" max="120" placeholder="e.g. 52" class="tabular-nums" />
             </div>
             <div class="field">
-              <label for="sex">Sex</label>
+              <label for="sex">Sex <span class="req-marker">Required</span></label>
               <select id="sex" name="sex">
                 <option value="">— Select —</option>
                 <option value="male">Male</option>
@@ -61,17 +61,14 @@
 
         <!-- GROUP 2: IDRS — Diabetes -->
         <fieldset class="form-group">
-          <legend class="group-label">
-            Diabetes Risk <span class="group-badge">IDRS</span>
-          </legend>
+          <legend class="group-label">Diabetes Risk</legend>
           <div class="grid-2">
             <div class="field">
-              <label for="waist">Waist Circumference (cm)</label>
-              <input type="number" id="waist" name="waist_circumference_cm" min="30" max="200" step="0.1" placeholder="e.g. 92" />
-              <span class="field-note">Mandatory for IDRS — do not substitute BMI</span>
+              <label for="waist">Waist Circumference (cm) <span class="req-marker">Required</span></label>
+              <input type="number" id="waist" name="waist_circumference_cm" min="30" max="200" step="0.1" placeholder="e.g. 92" class="tabular-nums" />
             </div>
             <div class="field">
-              <label for="physical_activity">Physical Activity</label>
+              <label for="physical_activity">Physical Activity <span class="req-marker">Required</span></label>
               <select id="physical_activity" name="physical_activity">
                 <option value="">— Select —</option>
                 <option value="vigorous">Vigorous (gym/sport daily)</option>
@@ -81,7 +78,7 @@
               </select>
             </div>
             <div class="field">
-              <label for="family_history_diabetes">Family History of Diabetes</label>
+              <label for="family_history_diabetes">Family History of Diabetes <span class="req-marker">Required</span></label>
               <select id="family_history_diabetes" name="family_history_diabetes">
                 <option value="">— Select —</option>
                 <option value="none">None</option>
@@ -102,17 +99,15 @@
 
         <!-- GROUP 3: Blood Pressure & CVD -->
         <fieldset class="form-group">
-          <legend class="group-label">
-            Blood Pressure & Cardiovascular <span class="group-badge">ACC/AHA · WHO-CVD</span>
-          </legend>
+          <legend class="group-label">Blood Pressure &amp; Cardiovascular</legend>
           <div class="grid-3">
             <div class="field">
               <label for="systolic_bp">Systolic BP (mm Hg)</label>
-              <input type="number" id="systolic_bp" name="systolic_bp" min="40" max="300" placeholder="e.g. 138" />
+              <input type="number" id="systolic_bp" name="systolic_bp" min="40" max="300" placeholder="e.g. 138" class="tabular-nums" />
             </div>
             <div class="field">
               <label for="diastolic_bp">Diastolic BP (mm Hg)</label>
-              <input type="number" id="diastolic_bp" name="diastolic_bp" min="20" max="200" placeholder="e.g. 86" />
+              <input type="number" id="diastolic_bp" name="diastolic_bp" min="20" max="200" placeholder="e.g. 86" class="tabular-nums" />
             </div>
             <div class="field">
               <label for="is_smoker">Smoking Status</label>
@@ -124,19 +119,19 @@
             </div>
             <div class="field">
               <label for="total_cholesterol">Total Cholesterol (mmol/L)</label>
-              <input type="number" id="total_cholesterol" name="total_cholesterol_mmol_L" min="1" max="15" step="0.1" placeholder="e.g. 5.2 (lab-based chart)" />
+              <input type="number" id="total_cholesterol" name="total_cholesterol_mmol_L" min="1" max="15" step="0.1" placeholder="e.g. 5.2" class="tabular-nums" />
             </div>
             <div class="field">
               <label for="bmi">BMI (kg/m²)</label>
-              <input type="number" id="bmi" name="bmi" min="10" max="70" step="0.1" placeholder="e.g. 26 (non-lab fallback)" />
+              <input type="number" id="bmi" name="bmi" min="10" max="70" step="0.1" placeholder="e.g. 26" class="tabular-nums" />
+              <span class="field-note">Used as non-lab fallback if lipids missing.</span>
             </div>
             <div class="field">
               <label for="ascvd">10-yr ASCVD Risk (%)</label>
-              <input type="number" id="ascvd" name="ascvd_10y_risk_percent" min="0" max="100" step="0.1" placeholder="e.g. 12.5" />
-              <span class="field-note">Used for HTN Stage 1 treatment decision</span>
+              <input type="number" id="ascvd" name="ascvd_10y_risk_percent" min="0" max="100" step="0.1" placeholder="e.g. 12.5" class="tabular-nums" />
             </div>
           </div>
-          <div class="grid-2" style="margin-top:1rem">
+          <div class="grid-2" style="margin-top:1.25rem">
             <div class="field">
               <label for="known_cvd">Known Clinical CVD</label>
               <select id="known_cvd" name="known_clinical_cvd">
@@ -157,26 +152,22 @@
 
         <!-- GROUP 4: CKD -->
         <fieldset class="form-group">
-          <legend class="group-label">
-            Kidney Function <span class="group-badge">KDIGO</span>
-          </legend>
+          <legend class="group-label">Kidney Function</legend>
           <div class="grid-2">
             <div class="field">
               <label for="serum_creatinine">Serum Creatinine (mg/dL)</label>
-              <input type="number" id="serum_creatinine" name="serum_creatinine_mg_dl" min="0.1" max="20" step="0.01" placeholder="e.g. 1.1" />
+              <input type="number" id="serum_creatinine" name="serum_creatinine_mg_dl" min="0.1" max="20" step="0.01" placeholder="e.g. 1.1" class="tabular-nums" />
             </div>
             <div class="field">
               <label for="urine_acr">Urine ACR (mg/g)</label>
-              <input type="number" id="urine_acr" name="urine_acr_mg_g" min="0" max="10000" step="1" placeholder="e.g. 45" />
+              <input type="number" id="urine_acr" name="urine_acr_mg_g" min="0" max="10000" step="1" placeholder="e.g. 45" class="tabular-nums" />
             </div>
           </div>
         </fieldset>
 
         <!-- GROUP 5: Stroke -->
         <fieldset class="form-group">
-          <legend class="group-label">
-            Stroke History & Acute Presentation <span class="group-badge">ACC/AHA</span>
-          </legend>
+          <legend class="group-label">Stroke Presentation</legend>
           <div class="grid-3">
             <div class="field">
               <label for="prior_stroke">Prior Stroke / TIA</label>
@@ -197,37 +188,46 @@
             </div>
             <div class="field" id="stroke-hours-field" style="display:none">
               <label for="hours_since_stroke">Hours Since Onset</label>
-              <input type="number" id="hours_since_stroke" name="hours_since_stroke_onset" min="0" max="240" step="0.5" placeholder="e.g. 3" />
+              <input type="number" id="hours_since_stroke" name="hours_since_stroke_onset" min="0" max="240" step="0.5" placeholder="e.g. 3" class="tabular-nums" />
             </div>
           </div>
         </fieldset>
 
-        <!-- GROUP 6: Output Options -->
-        <fieldset class="form-group">
-          <legend class="group-label">Output Options</legend>
-          <div class="grid-2">
-            <div class="field">
-              <label for="language">Explanation Language</label>
-              <select id="language" name="language">
-                <option value="English">English</option>
-                <option value="Hindi">Hindi (हिंदी)</option>
-                <option value="Gujarati">Gujarati (ગુજરાતી)</option>
-                <option value="Tamil">Tamil (தமிழ்)</option>
-                <option value="Telugu">Telugu (తెలుగు)</option>
-                <option value="Marathi">Marathi (मराठी)</option>
-                <option value="Kannada">Kannada (ಕನ್ನಡ)</option>
-              </select>
-            </div>
+        <!-- Output Options -->
+        <div style="margin-top:2rem; display:flex; justify-content:flex-end;">
+          <div class="field" style="max-width: 200px;">
+            <label for="language" style="font-size:0.75rem;">Output Language</label>
+            <select id="language" name="language" style="padding:0.4rem; font-size:0.85rem;">
+              <option value="English">English</option>
+              <option value="Hindi">Hindi (हिंदी)</option>
+              <option value="Gujarati">Gujarati (ગુજરાતી)</option>
+              <option value="Tamil">Tamil (தமிழ்)</option>
+              <option value="Telugu">Telugu (తెలుగు)</option>
+              <option value="Marathi">Marathi (मराठी)</option>
+              <option value="Kannada">Kannada (ಕನ್ನಡ)</option>
+            </select>
           </div>
-        </fieldset>
+        </div>
 
         <div class="form-actions">
           <button type="submit" id="submit-btn" class="btn btn--primary">
             <span class="btn-text">Run Clinical Assessment</span>
             <span class="btn-loader" aria-hidden="true"></span>
           </button>
-          <button type="reset" class="btn btn--ghost">Clear Form</button>
-          <button type="button" id="demo-btn" class="btn btn--ghost">Load Sample Case</button>
+          <select id="demo-select" class="btn btn--ghost" style="padding: 0.75rem 1.5rem; border-radius: var(--radius-sm); font-size: 0.9rem; font-family: var(--font-body); cursor: pointer; border: 1px solid var(--border-dark); background-color: transparent; color: var(--text-primary); appearance: auto;">
+            <option value="">— Select Sample Case —</option>
+            <option value="P01_low_risk_full_data">P01: Low Risk (Healthy)</option>
+            <option value="P02_moderate_risk_full_data">P02: Moderate Risk</option>
+            <option value="P03_high_risk_full_data">P03: High Risk (Multi-condition)</option>
+            <option value="P04_missing_labs_moderate">P04: Missing Labs</option>
+            <option value="P05_minimal_data_vitals_only">P05: Vitals Only</option>
+            <option value="P06_fully_normal">P06: Fully Normal</option>
+            <option value="P07_multi_comorbid_severe">P07: Severe Multi-comorbid</option>
+            <option value="P08_known_diabetes_diagnosis">P08: Known Diabetic</option>
+            <option value="P09_acute_ischemic_stroke">P09: Acute Ischemic Stroke</option>
+            <option value="P10_elderly_boundary_values">P10: Elderly Edge Cases</option>
+          </select>
+          <button type="reset" class="btn btn--ghost" style="margin-left:auto;">Clear</button>
         </div>
       </form>
     </section>
@@ -237,113 +237,115 @@
 
       <!-- Referral Banner -->
       <div id="referral-banner" class="referral-banner" style="display:none">
-        <div class="referral-icon">🚨</div>
+        <div class="referral-icon" id="ref-icon"></div>
         <div class="referral-content">
-          <h2 class="referral-title">Referral Recommended</h2>
+          <h2 class="referral-title" id="ref-title"></h2>
           <ul id="referral-reasons" class="referral-list"></ul>
         </div>
       </div>
 
       <!-- Risk Gauges -->
       <div class="gauges-grid">
+        
+        <!-- DIABETES -->
         <div class="gauge-card" id="gauge-idrs">
-          <div class="gauge-label">Diabetes Risk</div>
-          <div class="gauge-sub">IDRS</div>
-          <div class="gauge-ring-wrap">
-            <svg class="gauge-ring" viewBox="0 0 100 100">
-              <circle class="gauge-track" cx="50" cy="50" r="40" />
-              <circle class="gauge-fill" id="idrs-arc" cx="50" cy="50" r="40" />
-            </svg>
-            <div class="gauge-center">
-              <span class="gauge-score" id="idrs-score">—</span>
-              <span class="gauge-unit" id="idrs-unit">/100</span>
-            </div>
+          <div class="gauge-header">
+            <div class="gauge-label">Diabetes Risk</div>
+            <div class="gauge-sub">MDRF-IDRS</div>
           </div>
-          <div class="gauge-category" id="idrs-category">—</div>
+          <div class="gauge-main">
+            <div class="gauge-score-wrap">
+              <span class="gauge-score tabular-nums" id="idrs-score">—</span>
+              <span class="gauge-unit">/100 points</span>
+            </div>
+            <div class="gauge-category" id="idrs-category">—</div>
+          </div>
+          <!-- Explainability breakdown -->
+          <div class="score-breakdown" id="idrs-breakdown"></div>
+          <div class="breakdown-labels" id="idrs-breakdown-labels"></div>
         </div>
 
+        <!-- HYPERTENSION -->
         <div class="gauge-card" id="gauge-htn">
-          <div class="gauge-label">Hypertension</div>
-          <div class="gauge-sub">ACC/AHA 2017</div>
-          <div class="gauge-ring-wrap">
-            <svg class="gauge-ring" viewBox="0 0 100 100">
-              <circle class="gauge-track" cx="50" cy="50" r="40" />
-              <circle class="gauge-fill" id="htn-arc" cx="50" cy="50" r="40" />
-            </svg>
-            <div class="gauge-center">
-              <span class="gauge-score" id="htn-score">—</span>
-            </div>
+          <div class="gauge-header">
+            <div class="gauge-label">Blood Pressure</div>
+            <div class="gauge-sub">ACC/AHA 2017</div>
           </div>
-          <div class="gauge-category" id="htn-category">—</div>
+          <div class="gauge-main">
+            <div class="gauge-score-wrap">
+              <span class="gauge-score tabular-nums" id="htn-score">—</span>
+              <span class="gauge-unit">mm Hg</span>
+            </div>
+            <div class="gauge-category" id="htn-category">—</div>
+          </div>
         </div>
 
+        <!-- CVD RISK -->
         <div class="gauge-card" id="gauge-cvd">
-          <div class="gauge-label">10-yr CVD Risk</div>
-          <div class="gauge-sub">WHO South Asia</div>
-          <div class="gauge-ring-wrap">
-            <svg class="gauge-ring" viewBox="0 0 100 100">
-              <circle class="gauge-track" cx="50" cy="50" r="40" />
-              <circle class="gauge-fill" id="cvd-arc" cx="50" cy="50" r="40" />
-            </svg>
-            <div class="gauge-center">
-              <span class="gauge-score" id="cvd-score">—</span>
-            </div>
+          <div class="gauge-header">
+            <div class="gauge-label">10-yr CVD Risk</div>
+            <div class="gauge-sub">WHO South Asia 2019</div>
           </div>
-          <div class="gauge-category" id="cvd-category">—</div>
+          <div class="gauge-main">
+            <div class="gauge-score-wrap">
+              <span class="gauge-score tabular-nums" id="cvd-score">—</span>
+              <span class="gauge-unit">percent</span>
+            </div>
+            <div class="gauge-category" id="cvd-category">—</div>
+          </div>
         </div>
 
+        <!-- CKD RISK -->
         <div class="gauge-card" id="gauge-ckd">
-          <div class="gauge-label">Kidney Disease</div>
-          <div class="gauge-sub">KDIGO</div>
-          <div class="gauge-ring-wrap">
-            <svg class="gauge-ring" viewBox="0 0 100 100">
-              <circle class="gauge-track" cx="50" cy="50" r="40" />
-              <circle class="gauge-fill" id="ckd-arc" cx="50" cy="50" r="40" />
-            </svg>
-            <div class="gauge-center">
-              <span class="gauge-score" id="ckd-score">—</span>
-            </div>
+          <div class="gauge-header">
+            <div class="gauge-label">Kidney Disease</div>
+            <div class="gauge-sub">KDIGO 2024 / CKD-EPI</div>
           </div>
-          <div class="gauge-category" id="ckd-category">—</div>
+          <div class="gauge-main">
+            <div class="gauge-score-wrap">
+              <span class="gauge-score tabular-nums" id="ckd-score">—</span>
+              <span class="gauge-unit">eGFR</span>
+            </div>
+            <div class="gauge-category" id="ckd-category">—</div>
+          </div>
         </div>
       </div>
 
       <!-- Detail Cards Row -->
       <div class="detail-row">
-
         <!-- Missing Investigations -->
         <div class="card detail-card" id="missing-card">
-          <div class="card-header">
-            <h2 class="card-title">
-              <span class="icon">🧪</span> Missing Investigations
-              <span class="badge badge--orange" id="missing-count"></span>
-            </h2>
+          <div class="card-header card-header--flex">
+            <h2 class="card-title">Missing Investigations</h2>
+            <span class="badge badge--orange" id="missing-count"></span>
           </div>
-          <ul id="missing-list" class="missing-list"></ul>
-          <p id="missing-empty" class="empty-msg" style="display:none">No missing investigations flagged.</p>
+          <div class="card-body">
+            <ul id="missing-list" class="missing-list"></ul>
+            <p id="missing-empty" class="empty-msg" style="display:none">No missing investigations flagged.</p>
+          </div>
         </div>
 
         <!-- HTN Treatment Plan -->
         <div class="card detail-card" id="htn-detail-card">
           <div class="card-header">
-            <h2 class="card-title"><span class="icon">💊</span> Treatment Plan</h2>
+            <h2 class="card-title">HTN Treatment Plan</h2>
           </div>
-          <div id="htn-treatment-content" class="detail-content"></div>
+          <div class="card-body" id="htn-treatment-content"></div>
         </div>
       </div>
 
       <!-- CKD Detail -->
       <div class="card detail-card--wide" id="ckd-detail-card" style="display:none">
         <div class="card-header">
-          <h2 class="card-title"><span class="icon">🫘</span> CKD Detail</h2>
+          <h2 class="card-title">CKD Detail (KDIGO)</h2>
         </div>
-        <div id="ckd-detail-content" class="detail-content"></div>
+        <div class="card-body" id="ckd-detail-content"></div>
       </div>
 
       <!-- LLM Explanation -->
       <div class="card llm-card" id="llm-card">
-        <div class="card-header">
-          <h2 class="card-title"><span class="icon">💬</span> AI Explanation</h2>
+        <div class="card-header card-header--flex">
+          <h2 class="card-title">AI Clinical Note</h2>
           <span class="badge badge--blue" id="llm-lang-badge">English</span>
         </div>
         <div id="llm-content" class="llm-body">
@@ -351,27 +353,25 @@
             <div class="spinner"></div>
             <p>Generating clinical explanation…</p>
           </div>
-          <div id="llm-text" class="llm-text" style="display:none"></div>
+          <div id="llm-text" class="llm-text" style="display:none">
+             <div class="llm-text-content" id="llm-text-content-wrapper"></div>
+          </div>
           <div id="llm-disabled" class="llm-disabled" style="display:none">
-            <span class="icon">ℹ️</span>
-            <div>
-              <p>LLM explanation is disabled. Add one of the following to your <code>.env</code> file:</p>
-              <p style="margin-top:0.4rem"><code>NVIDIA_API_KEY</code> — <a href="https://build.nvidia.com" target="_blank" style="color:var(--accent)">build.nvidia.com</a> (free credits, recommended)</p>
-              <p style="margin-top:0.2rem"><code>OPENROUTER_API_KEY</code> — <a href="https://openrouter.ai/keys" target="_blank" style="color:var(--accent)">openrouter.ai/keys</a> (permanently free models)</p>
-            </div>
+            <p>LLM explanation is disabled. Add one of the following to your <code>.env</code> file:</p>
+            <p><code>NVIDIA_API_KEY</code> — <a href="https://build.nvidia.com" target="_blank" style="color:var(--accent)">build.nvidia.com</a></p>
+            <p><code>OPENROUTER_API_KEY</code> — <a href="https://openrouter.ai/keys" target="_blank" style="color:var(--accent)">openrouter.ai/keys</a></p>
           </div>
         </div>
       </div>
 
       <div class="results-actions">
-        <button id="new-assessment-btn" class="btn btn--ghost">← New Assessment</button>
+        <button id="new-assessment-btn" class="btn btn--ghost">← Start New Assessment</button>
       </div>
     </section>
 
   </main>
 
   <footer class="footer">
-    <p>Clinical logic strictly based on ICMR-INDIAB IDRS · WHO CVD South Asia 2019 · 2017 ACC/AHA · KDIGO 2021.</p>
     <p>This tool is a clinical decision <strong>aid</strong> — not a substitute for physician judgment.</p>
   </footer>
 
