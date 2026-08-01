@@ -33,3 +33,24 @@ The clinical engines are thoroughly unit-tested to ensure perfect alignment with
 ```bash
 python -m unittest test_engines.py
 ```
+
+## 📚 Clinical References & Sources
+The logic in this engine is strictly built upon verified medical guidelines. The source documents and validation papers are stored locally in the `/references/` directory.
+
+- **Diabetes (MDRF-IDRS):**
+  - *Source:* Validated via the ICMR-INDIAB national study.
+  - *Web Link:* [MDRF-IDRS / ICMR-INDIAB Validation](https://pubmed.ncbi.nlm.nih.gov/21745422/)
+  - *Local File:* `/references/IDRS.txt` and `/references/Indian_Diabetes_Risk_Score_in_detecting_undiagnosed_diabetes_in_the_Indian_population.md`
+- **Cardiovascular Disease (WHO-CVD):**
+  - *Source:* WHO CVD Risk Charts for South Asia (2019).
+  - *Web Link:* [WHO CVD Risk Chart Working Group](https://www.who.int/publications/i/item/9789241515986)
+  - *Local File:* `/references/south-asia-1.png` (lab-based) and `/references/south-asia-2.png` (non-lab-based)
+- **Hypertension (ACC/AHA):**
+  - *Source:* 2017 ACC/AHA Guideline for the Prevention, Detection, Evaluation, and Management of High Blood Pressure in Adults.
+  - *Web Link:* [AHA/ACC 2017 Guidelines](https://www.ahajournals.org/doi/10.1161/HYP.0000000000000065)
+  - *Local File:* `/references/2017_ACC_AHA.txt`
+- **Chronic Kidney Disease (KDIGO):**
+  - *Source:* KDIGO 2012 / 2024 Clinical Practice Guideline for the Evaluation and Management of Chronic Kidney Disease.
+  - *Web Link:* [KDIGO CKD Guidelines](https://kdigo.org/guidelines/ckd-evaluation-and-management/)
+  - *Local File:* `/references/kdigo_ckd_epi_formula.md` and KDIGO heatmaps (`/references/kdigo_heatmap (1).png`)
+
