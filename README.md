@@ -78,3 +78,20 @@ The logic in this engine is strictly built upon verified medical guidelines. The
   - *Source:* KDIGO 2012 / 2024 Clinical Practice Guideline for the Evaluation and Management of Chronic Kidney Disease.
   - *Web Link:* [KDIGO CKD Guidelines Heatmap](https://kdigo.org/heat-map/)
   - *Local File:* `/references/kdigo_ckd_epi_formula.md` and KDIGO heatmaps (`/references/kdigo_heatmap (1).png`)
+
+## 🚀 Clinical Test Cases & Results Screenshots
+
+To help evaluators and mentors verify the clinical scoring logic quickly, the system includes 10 synthetic test cases directly accessible via the UI dropdown. Below are screenshots of key clinical pathways and their results:
+
+### 1. Test Case P03: Multi-Condition High Risk (Full Lab Data)
+Displays concurrent risks: Stage 2 Hypertension, High IDRS, and CKD Orange. The referral engine recommends urgent referral with explicit clinical justifications.
+![P03 High Risk Case](references/p03_results.png)
+
+### 2. Test Case P04: Missing Labs Fallback (Graceful Degradation)
+Displays CVD calculation automatically falling back to the non-lab BMI-based chart due to missing cholesterol. The required investigations panel flags missing tests.
+![P04 Graceful Degradation Case](references/p04_results.png)
+
+### 3. Test Case P06: Healthy Baseline (All Normal)
+Displays the calm state UI when all clinical guidelines are met within normal limits.
+![P06 Healthy Baseline](references/p06_results.png)
+
