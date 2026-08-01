@@ -695,3 +695,64 @@ form { padding: 1.5rem 1.75rem 2rem; }
   opacity: 1;
   transform: translateX(-50%) scale(1);
 }
+
+/* ---- Theme Toggle Button ---- */
+.btn-theme-toggle {
+  background: transparent;
+  border: 1px solid var(--border-dark);
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 1.05rem;
+  transition: background-color 0.2s, transform 0.2s, border-color 0.2s;
+  padding: 0;
+  line-height: 1;
+}
+
+.btn-theme-toggle:hover {
+  background-color: var(--surface-muted);
+  transform: scale(1.08);
+}
+
+/* ---- Dark Mode Color Token Overrides ---- */
+[data-theme="dark"] {
+  --bg-base:        #0f172a;
+  --surface-card:   #1e293b;
+  --surface-muted:  #334155;
+  --border-light:   #334155;
+  --border-dark:    #475569;
+  
+  --text-primary:   #f8fafc;
+  --text-secondary: #cbd5e1;
+  --text-tertiary:  #94a3b8;
+  
+  --accent-light:   #1e3a8a;
+  --accent:         #3b82f6;
+
+  /* Opacity based risk bgs in dark mode for excellent text contrast */
+  --risk-green-bg:  rgba(16, 185, 129, 0.18);
+  --risk-yellow-bg: rgba(245, 158, 11, 0.22);
+  --risk-orange-bg: rgba(249, 115, 22, 0.22);
+  --risk-red-bg:    rgba(239, 68, 68, 0.22);
+  --risk-na-bg:     rgba(148, 163, 184, 0.2);
+}
+
+[data-theme="dark"] input,
+[data-theme="dark"] select {
+  background-color: #1e293b;
+  color: #f8fafc;
+}
+
+[data-theme="dark"] select option {
+  background-color: #1e293b;
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .llm-disabled code {
+  background-color: #0f172a;
+}
+
