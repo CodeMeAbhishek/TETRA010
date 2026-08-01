@@ -61,7 +61,7 @@
 
         <!-- GROUP 2: IDRS — Diabetes -->
         <fieldset class="form-group">
-          <legend class="group-label">Diabetes Risk</legend>
+          <legend class="group-label">Diabetes Risk <span class="info-tooltip-trigger" data-tooltip="IDRS: Indian Diabetes Risk Score. A validated screening tool based on age, waist circumference, physical activity, and family history.">i</span></legend>
           <div class="grid-2">
             <div class="field">
               <label for="waist">Waist Circumference (cm) <span class="req-marker">Required</span></label>
@@ -102,11 +102,11 @@
           <legend class="group-label">Blood Pressure &amp; Cardiovascular</legend>
           <div class="grid-3">
             <div class="field">
-              <label for="systolic_bp">Systolic BP (mm Hg)</label>
+              <label for="systolic_bp">Systolic BP (mm Hg) <span class="info-tooltip-trigger" data-tooltip="BP: Blood Pressure. The force of blood pushing against artery walls. Systolic is the pressure when the heart beats.">i</span></label>
               <input type="number" id="systolic_bp" name="systolic_bp" min="40" max="300" placeholder="e.g. 138" class="tabular-nums" />
             </div>
             <div class="field">
-              <label for="diastolic_bp">Diastolic BP (mm Hg)</label>
+              <label for="diastolic_bp">Diastolic BP (mm Hg) <span class="info-tooltip-trigger" data-tooltip="BP: Blood Pressure. Diastolic is the pressure in the arteries when the heart rests between beats.">i</span></label>
               <input type="number" id="diastolic_bp" name="diastolic_bp" min="20" max="200" placeholder="e.g. 86" class="tabular-nums" />
             </div>
             <div class="field">
@@ -127,13 +127,13 @@
               <span class="field-note">Used as non-lab fallback if lipids missing.</span>
             </div>
             <div class="field">
-              <label for="ascvd">10-yr ASCVD Risk (%)</label>
+              <label for="ascvd">10-yr ASCVD Risk (%) <span class="info-tooltip-trigger" data-tooltip="ASCVD: Atherosclerotic Cardiovascular Disease. Calculates the 10-year likelihood of a cardiovascular event (heart attack or stroke).">i</span></label>
               <input type="number" id="ascvd" name="ascvd_10y_risk_percent" min="0" max="100" step="0.1" placeholder="e.g. 12.5" class="tabular-nums" />
             </div>
           </div>
           <div class="grid-2" style="margin-top:1.25rem">
             <div class="field">
-              <label for="known_cvd">Known Clinical CVD</label>
+              <label for="known_cvd">Known Clinical CVD <span class="info-tooltip-trigger" data-tooltip="CVD: Cardiovascular Disease. Includes conditions affecting the heart or blood vessels like coronary artery disease, peripheral arterial disease, etc.">i</span></label>
               <select id="known_cvd" name="known_clinical_cvd">
                 <option value="">— Select —</option>
                 <option value="false">No</option>
@@ -141,7 +141,7 @@
               </select>
             </div>
             <div class="field">
-              <label for="newly_diagnosed_htn">Newly Diagnosed HTN?</label>
+              <label for="newly_diagnosed_htn">Newly Diagnosed HTN? <span class="info-tooltip-trigger" data-tooltip="HTN: Hypertension. High blood pressure that requires monitoring or therapy. Newly diagnosed means no prior history of medication.">i</span></label>
               <select id="newly_diagnosed_htn" name="is_newly_diagnosed_htn">
                 <option value="false">No</option>
                 <option value="true">Yes — trigger full ACC/AHA test panel</option>
@@ -159,7 +159,7 @@
               <input type="number" id="serum_creatinine" name="serum_creatinine_mg_dl" min="0.1" max="20" step="0.01" placeholder="e.g. 1.1" class="tabular-nums" />
             </div>
             <div class="field">
-              <label for="urine_acr">Urine ACR (mg/g)</label>
+              <label for="urine_acr">Urine ACR (mg/g) <span class="info-tooltip-trigger" data-tooltip="ACR: Albumin-to-Creatinine Ratio. A test to screen for kidney damage. High albumin levels indicate the kidneys are leaking protein.">i</span></label>
               <input type="number" id="urine_acr" name="urine_acr_mg_g" min="0" max="10000" step="1" placeholder="e.g. 45" class="tabular-nums" />
             </div>
           </div>
@@ -170,7 +170,7 @@
           <legend class="group-label">Stroke Presentation</legend>
           <div class="grid-3">
             <div class="field">
-              <label for="prior_stroke">Prior Stroke / TIA</label>
+              <label for="prior_stroke">Prior Stroke / TIA <span class="info-tooltip-trigger" data-tooltip="TIA: Transient Ischemic Attack. A temporary blockage of blood flow to the brain, often called a mini-stroke, which increases risk of a full stroke.">i</span></label>
               <select id="prior_stroke" name="has_previous_stroke_or_tia">
                 <option value="">— Select —</option>
                 <option value="false">No</option>
