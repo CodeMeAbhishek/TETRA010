@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nidan — Health Risk Screening</title>
+  <meta name="description" content="Chat with Nidan to understand your risk for diabetes, heart disease, hypertension, and kidney disease. No forms — just a conversation." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <!-- Shared design tokens from the clinician UI -->
+  <link rel="stylesheet" href="style.css" />
+  <!-- Consumer-specific styles -->
+  <link rel="stylesheet" href="consumer.css" />
+</head>
+<body>
+
+  <div class="consumer-app" id="consumer-app">
+
+    <!-- ===== HEADER ===== -->
+    <header class="consumer-header">
+      <div class="consumer-logo">
+        <span class="consumer-logo-icon">⚕</span>
+        <div>
+          <span class="consumer-logo-title">Nidan</span>
+          <span class="consumer-logo-sub">Health Risk Screening</span>
+        </div>
+      </div>
+      <div class="consumer-header-actions">
+        <select id="demo-select" class="btn btn--ghost" style="padding: 0.4rem 1rem; border-radius: var(--radius-sm); font-size: 0.9rem; cursor: pointer; border: 1px solid var(--border-dark); background-color: transparent; color: var(--text-primary); max-width: 200px;">
+            <option value="">— Select Demo Scenario —</option>
+        </select>
+        <span class="badge badge--green" id="consumer-api-status">● Connecting…</span>
+        <a href="index.html" class="link-clinician" title="Clinician Dashboard">Clinician View →</a>
+        <button type="button" id="consumer-theme-toggle" class="btn-theme-toggle" title="Toggle theme">🌙</button>
+      </div>
+    </header>
+
+    <!-- ===== DEMO CONTROLS ===== -->
+    <div id="demo-controls" style="display: none; background: var(--bg-card); border-bottom: 1px solid var(--border-light); padding: 0.75rem 2rem; align-items: center; gap: 1rem; justify-content: flex-end;">
+      <span class="badge" style="background: var(--brand-blue); color: white; margin-right: auto;" id="demo-indicator">Demo Mode Active</span>
+      <span id="demo-status-text" style="font-size: 0.9rem; color: var(--text-secondary); margin-right: auto;"></span>
+      <button type="button" id="demo-btn-next" class="btn-assess" style="padding: 0.4rem 1.2rem; font-size: 0.9rem; margin: 0; min-width: 120px;">Next Turn</button>
+      <label style="font-size: 0.9rem; display: flex; align-items: center; gap: 0.5rem; cursor: pointer; color: var(--text-primary);">
+          <input type="checkbox" id="demo-auto-play" /> Auto-play
+      </label>
+      <button type="button" id="demo-btn-reset" class="btn-verify btn-edit" style="padding: 0.4rem 1rem; color: #ef4444; border-color: #fca5a5;">Reset & Exit Demo</button>
+    </div>
+
+    <!-- ===== CHAT AREA ===== -->
+    <div class="chat-area" id="chat-area">
+
+      <!-- Welcome card -->
+      <div class="welcome-card" id="welcome-card">
+        <span class="welcome-icon">🏥</span>
+        <h2>Check Your Health Risk</h2>
+        <p>Tell me about yourself — your age, lifestyle, any health concerns — and I'll screen you for diabetes, heart disease, high blood pressure, and kidney disease.</p>
+        <div class="welcome-hints">
+          <button class="hint-chip" data-hint="I'm 52 years old, male, and I don't exercise much.">I'm 52, male, sedentary</button>
+          <button class="hint-chip" data-hint="I'm a 45 year old woman. My mother has diabetes. I smoke occasionally.">45F, family diabetes, smoker</button>
+          <button class="hint-chip" data-hint="I'm 60 and my blood pressure was 150/95 at the pharmacy.">60, BP 150/95</button>
+          <button class="hint-chip" data-hint="I'm 38 years old, female, and I feel tired all the time. My waist is 88 cm.">38F, tired, waist 88cm</button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ===== ASSESS BUTTON BAR ===== -->
+    <div class="assess-bar" id="assess-bar">
+      <button class="btn-assess" id="btn-assess" type="button">🔬 Get My Results</button>
+    </div>
+
+    <!-- ===== INPUT BAR ===== -->
+    <div class="input-bar">
+      <button class="btn-upload" id="btn-upload" type="button" title="Upload a lab report">📎</button>
+      <input type="file" id="report-file-input" accept="image/*" />
+      <input type="text" id="chat-input" placeholder="Tell me about your health…" autocomplete="off" />
+      <button class="btn-send" id="btn-send" type="button" title="Send">➤</button>
+    </div>
+
+  </div>
+
+  <script src="consumer.js"></script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+[
+  {
+    "id": "sparse_diabetes",
+    "label": "Sparse Data — Diabetes Only",
+    "description": "Minimal input; proves scoring works from almost nothing while other three conditions are correctly withheld.",
+    "turns": [
+      "I'm 45 years old and male.",
+      "My waist is about 96 cm, I don't really exercise, and my father has diabetes."
+    ]
+  },
+  {
+    "id": "medium_three_conditions",
+    "label": "Medium Data — Diabetes + CVD + HTN (CKD via fallback)",
+    "description": "No lab values at all; demonstrates the CKD pre-test-probability fallback explicitly.",
+    "turns": [
+      "I'm a 58-year-old woman. My blood pressure was 148 over 92 last time I checked, and I'm a smoker.",
+      "My waist is 92 cm, I only do light walking a few times a week, and no one in my family has diabetes.",
+      "I weigh 78 kg and I'm 160 cm tall. I don't know my cholesterol number though."
+    ]
+  },
+  {
+    "id": "complete_all_four",
+    "label": "Complete Data — All Four Conditions",
+    "description": "Full lab panel; every engine fires.",
+    "turns": [
+      "I'm a 61-year-old man. My BP is 152/94, I don't smoke, and my total cholesterol is 5.8 mmol/L.",
+      "My waist is 101 cm, I get no regular exercise, and both my parents had diabetes.",
+      "My weight is 88 kg and height 172 cm. My last blood test showed serum creatinine of 1.6 mg/dL and urine ACR of 45 mg/g."
+    ]
+  },
+  {
+    "id": "symptom_driven",
+    "label": "Symptom-Led — Natural Language Extraction",
+    "description": "Free-text symptom description rather than lab-report recitation; shows NLP extraction quality.",
+    "turns": [
+      "I'm 67, I've been having chest tightness when I climb stairs, and I get short of breath. I also have swelling in my ankles by evening.",
+      "My blood pressure this morning was 168/100. I've smoked for 30 years.",
+      "I don't know my cholesterol, but I weigh around 82 kg and I'm 175 cm tall."
+    ]
+  },
+  {
+    "id": "minimal_declines",
+    "label": "Minimal / Safety Proof — User Declines Follow-Up",
+    "description": "Proves nothing gets fabricated when the user gives almost nothing and stops answering.",
+    "turns": [
+      "I'm 39 years old, that's really all I know off the top of my head.",
+      "I'd rather just see what you can tell me with what I've given you."
+    ]
+  },
+  {
+    "id": "conflict_demo",
+    "label": "Conflict Resolution — Restated Activity Level",
+    "description": "Cleanly demonstrates the conflict banner without the ambiguity seen in earlier manual testing.",
+    "turns": [
+      "I'm 50, male, and I don't get much exercise — pretty sedentary lifestyle.",
+      "Actually, I've started walking most days now, so I'd say I'm moderately active."
+    ]
+  },
+  {
+    "id": "implausible_value_catch",
+    "label": "Plausibility Check — Ambiguous Vital",
+    "description": "Proves the new plausibility-bounds fix (Bug B) catches an implausible value instead of silently accepting it.",
+    "turns": [
+      "I'm 44 and male.",
+      "I have 50 BP"
+    ]
+  }
+]
