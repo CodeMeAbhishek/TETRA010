@@ -498,9 +498,60 @@ function renderResults(data) {
     html += `<div class="result-llm">${escapeHtml(data.llm_explanation)}</div>`;
   }
 
+  // ── Patient → Clinician Handoff (Queue) ──────────────────────────────────
+  let handoff = null;
+  if (currentPayload) {
+    handoff = {
+      id: 'patient_' + Date.now() + Math.random().toString(36).substr(2, 5),
+      timestamp: new Date().toISOString(),
+      payload: currentPayload,
+      assessment_summary: {
+        engines_run: engines.filter(e => data.structured_data[e.key] && (
+          (e.scoreKey && data.structured_data[e.key][e.scoreKey] != null) ||
+          (e.catKey  && data.structured_data[e.key][e.catKey]  != null)
+        )).map(e => e.name),
+        referral_recommended: (data.structured_data.referral_decision || {}).referral_recommended || false,
+      }
+    };
+  }
+
+  // Add "Submit to Clinician" CTA button
+  const ctaDiv = document.createElement('div');
+  ctaDiv.style.cssText = 'margin-top:1rem; padding: 1rem; background: var(--bg-card); border: 1px solid var(--brand-blue); border-radius: var(--radius-md); display:flex; align-items:center; gap:1rem; flex-wrap:wrap;';
+  ctaDiv.innerHTML = `
+    <div style="flex:1; min-width:180px;">
+      <div style="font-weight:600; color:var(--text-primary); font-size:0.95rem;">📋 Submit your assessment</div>
+      <div style="font-size:0.82rem; color:var(--text-secondary); margin-top:0.2rem;">Your answers are ready. Submit them securely to your doctor's queue.</div>
+    </div>
+    <button type="button" class="btn-assess" style="padding:0.5rem 1.25rem; font-size:0.9rem; white-space:nowrap;" id="btn-submit-to-clinician">
+      Submit to Doctor
+    </button>
+  `;
+  
   panel.innerHTML = html;
+  panel.appendChild(ctaDiv); // append CTA inside the panel
   chatArea.appendChild(panel);
   scrollToBottom();
+
+  const submitBtn = document.getElementById('btn-submit-to-clinician');
+  if (submitBtn && handoff) {
+    submitBtn.addEventListener('click', () => {
+      // 1. Read existing queue
+      let queue = [];
+      const rawQueue = localStorage.getItem('nidan-patient-queue');
+      if (rawQueue) {
+        try { queue = JSON.parse(rawQueue); } catch (e) {}
+      }
+      
+      // 2. Add current patient
+      queue.push(handoff);
+      localStorage.setItem('nidan-patient-queue', JSON.stringify(queue));
+      
+      // 3. Update UI to show completion
+      ctaDiv.innerHTML = `<div style="color: var(--brand-green); font-weight: 600; width: 100%; text-align: center;">✅ Sent successfully. Please return the device to the front desk or close this window.</div>`;
+      document.getElementById('chat-input-bar').style.display = 'none'; // disable further chat
+    });
+  }
 
   // Hide assess bar after showing results
   assessBar.className = 'assess-bar';

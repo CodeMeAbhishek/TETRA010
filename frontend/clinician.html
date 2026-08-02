@@ -24,6 +24,7 @@
       </div>
       <div class="header-meta">
         <div style="display: flex; align-items: center; gap: 0.75rem;">
+          <a href="index.html" class="link-clinician" title="Return to Portal" style="font-size:0.85rem; color: var(--text-secondary); text-decoration:none; border:1px solid var(--border-light); border-radius: var(--radius-sm); padding: 0.3rem 0.75rem; white-space:nowrap;">← Home</a>
           <span class="badge badge--green" id="api-status">API Ready</span>
           <button type="button" id="theme-toggle" class="btn-theme-toggle" title="Toggle theme">🌙</button>
         </div>
@@ -33,6 +34,20 @@
   </header>
 
   <main class="main">
+  
+    <!-- ===== PATIENT QUEUE ===== -->
+    <section class="card" id="queue-section" style="margin-bottom: 1.5rem; display: none;">
+      <div class="card-header" style="padding-bottom: 1rem; border-bottom: 1px solid var(--border-light); margin-bottom: 1rem;">
+        <h2 class="card-title" style="font-size: 1.25rem; display: flex; align-items: center; justify-content: space-between;">
+          <span>📋 Pending Triage Queue</span>
+          <span id="queue-count" class="badge badge--blue" style="font-size:0.8rem;">0</span>
+        </h2>
+        <p class="card-desc">Patients who completed self-screening and are waiting for review.</p>
+      </div>
+      <div id="queue-list" style="display: flex; flex-direction: column; gap: 0.75rem;">
+        <!-- Queue items will be injected here -->
+      </div>
+    </section>
 
     <!-- ===== FORM PANEL ===== -->
     <section class="card form-card" id="form-section" aria-label="Patient Data Entry">
