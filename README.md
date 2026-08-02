@@ -118,3 +118,10 @@ The Consumer Tier provides a natural-language chat interface (`/consumer.html`) 
 - **Plausibility Bounds:** Out-of-range clinical values (e.g. BP=50) are intercepted.
 - **Polarity Grounding:** The assistant strictly respects stored negative/positive traits (e.g. "sedentary" is not confused with "active").
 - **Strict Orchestration:** The LLM still never calculates scores; it only formats inputs for the same deterministic clinical engines used by the Clinician UI.
+- **Seamless Triage Handoff:** Once a patient completes the consumer screening, their extracted data and recommended referral are securely placed into a triage queue, instantly appearing on the Clinician Dashboard (`clinician.html`) for doctor review.
+
+## ☁️ Deployment (Render & Vercel)
+
+This repository is configured for easy, zero-downtime deployment:
+1. **Backend (Render):** Uses the `render.yaml` Blueprint to automatically deploy the FastAPI service.
+2. **Frontend (Vercel):** The `vercel.json` configures Vercel to serve the static frontend app. Make sure to set the **Root Directory** in Vercel to `frontend` so it doesn't accidentally trigger a Python build. The frontend logic dynamically targets your Render URL when deployed.
