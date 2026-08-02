@@ -110,5 +110,11 @@ Displays the calm state UI when all clinical guidelines are met within normal li
 *AI Clinical Explanation & Action Plan (P06):*
 <img src="references/p06_explanation.png" width="680" alt="P06 AI Explanation" style="border: 1px solid #e2e8f0; border-radius: 6px; margin: 10px 0;" />
 
+## 🌟 Consumer Tier (New)
 
+The Consumer Tier provides a natural-language chat interface (`/consumer.html`) where patients can type symptoms or upload lab reports. The system safely extracts values, asks follow-up questions for missing required fields (Gap Analysis), and never guesses clinical data. 
 
+**Key Safety Features:**
+- **Plausibility Bounds:** Out-of-range clinical values (e.g. BP=50) are intercepted.
+- **Polarity Grounding:** The assistant strictly respects stored negative/positive traits (e.g. "sedentary" is not confused with "active").
+- **Strict Orchestration:** The LLM still never calculates scores; it only formats inputs for the same deterministic clinical engines used by the Clinician UI.

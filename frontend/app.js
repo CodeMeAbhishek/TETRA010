@@ -393,15 +393,18 @@ function renderLLM(text, language) {
 }
 
 function formatLLMText(text) {
-  let html = escHtml(text)
+  let html = window.marked ? window.marked.parse(text) : escHtml(text)
     .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
     .replace(/\n/g, '<br>');
     
   if (html.toLowerCase().includes('patient summary') && html.toLowerCase().includes('referral note')) {
     // Basic heuristic to split the text into two distinct sections for typography
-    const parts = html.split(/Referral Note/i);
-    return `<div class="llm-section-patient">${parts[0]}</div>
-            <div class="llm-section-clinical"><strong>Referral Note</strong><br>${parts[1]}</div>`;
+    // Handle both unparsed and marked HTML formats of the section header
+    const parts = html.split(/(?:<h\d>)?(?:<p>)?(?:<strong>)?Referral Note(?:<\/strong>)?(?:<\/p>)?(?:<\/h\d>)?/i);
+    if (parts.length > 1) {
+      return `<div class="llm-section-patient">${parts[0]}</div>
+              <div class="llm-section-clinical"><strong>Referral Note</strong><br>${parts[1]}</div>`;
+    }
   }
   return html;
 }
@@ -607,5 +610,97 @@ if (themeToggleBtn) {
       themeToggleBtn.textContent = '☀️';
     }
   });
-}
+// ============================================================
+// PATIENT QUEUE (CLINICIAN INBOX)
+// Reads from 'nidan-patient-queue' populated by consumer app
+// ============================================================
+(function initPatientQueue() {
+  const queueSection = document.getElementById('queue-section');
+  const queueList = document.getElementById('queue-list');
+  const queueCount = document.getElementById('queue-count');
+  
+  if (!queueSection || !queueList || !queueCount) return;
 
+  function renderQueue() {
+    let queue = [];
+    try {
+      queue = JSON.parse(localStorage.getItem('nidan-patient-queue') || '[]');
+    } catch(e) {}
+
+    if (queue.length === 0) {
+      queueSection.style.display = 'none';
+      return;
+    }
+
+    queueSection.style.display = 'block';
+    queueCount.textContent = queue.length;
+    queueList.innerHTML = '';
+
+    queue.forEach((patient, idx) => {
+      const p = patient.payload || {};
+      const ageSex = `${p.age ? p.age + 'y' : 'Unknown age'} ${p.sex ? p.sex : 'unknown sex'}`;
+      const ts = new Date(patient.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      
+      const item = document.createElement('div');
+      item.style.cssText = 'background: var(--bg-body); border: 1px solid var(--border-light); border-radius: var(--radius-sm); padding: 1rem; display: flex; justify-content: space-between; align-items: center; gap: 1rem;';
+      
+      const refAlert = patient.assessment_summary?.referral_recommended
+        ? '<span style="color:#ef4444; font-weight:600; font-size:0.85rem; margin-left:0.5rem;">⚠ Referral Flag</span>'
+        : '';
+
+      item.innerHTML = `
+        <div>
+          <div style="font-weight:600; color:var(--text-primary); margin-bottom:0.25rem;">Patient Intake ${idx + 1} &mdash; ${ts} ${refAlert}</div>
+          <div style="font-size:0.85rem; color:var(--text-secondary);">${ageSex} • Screened for: ${(patient.assessment_summary?.engines_run || []).join(', ')}</div>
+        </div>
+        <button class="btn btn--primary" style="padding: 0.4rem 1rem; font-size: 0.85rem; white-space:nowrap;">Review Data</button>
+      `;
+
+      item.querySelector('button').addEventListener('click', () => {
+        loadPatientIntoForm(patient);
+        // Remove from queue
+        queue.splice(idx, 1);
+        localStorage.setItem('nidan-patient-queue', JSON.stringify(queue));
+        renderQueue();
+      });
+
+      queueList.appendChild(item);
+    });
+  }
+
+  function loadPatientIntoForm(patient) {
+    const fields = patient.payload || {};
+    const fieldMap = {
+      age: 'age', sex: 'sex', waist_circumference_cm: 'waist_circumference_cm',
+      physical_activity: 'physical_activity', family_history_diabetes: 'family_history_diabetes',
+      is_smoker: 'is_smoker', systolic_bp: 'systolic_bp', diastolic_bp: 'diastolic_bp',
+      total_cholesterol_mmol_L: 'total_cholesterol_mmol_L', bmi: 'bmi', has_diabetes: 'has_diabetes',
+      serum_creatinine_mg_dl: 'serum_creatinine_mg_dl', urine_acr_mg_g: 'urine_acr_mg_g',
+      ascvd_10y_risk_percent: 'ascvd_10y_risk_percent', known_clinical_cvd: 'known_clinical_cvd',
+    };
+
+    let prefilled = 0;
+    Object.entries(fieldMap).forEach(([payloadKey, formId]) => {
+      const fieldObj = fields[payloadKey];
+      if (!fieldObj || fieldObj.value == null) return;
+      const el = document.getElementById(formId);
+      if (!el) return;
+      el.value = typeof fieldObj.value === 'boolean' ? String(fieldObj.value) : fieldObj.value;
+      prefilled++;
+    });
+
+    // Scroll to form and highlight it briefly
+    const formSec = document.getElementById('form-section');
+    formSec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    formSec.style.boxShadow = '0 0 0 3px var(--brand-blue)';
+    setTimeout(() => formSec.style.boxShadow = '', 1500);
+  }
+
+  // Initial render
+  renderQueue();
+  
+  // Listen for changes across tabs
+  window.addEventListener('storage', (e) => {
+    if (e.key === 'nidan-patient-queue') renderQueue();
+  });
+})();

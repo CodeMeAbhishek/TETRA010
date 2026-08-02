@@ -8,7 +8,6 @@ import os
 from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 from typing import Optional
 
@@ -139,7 +138,11 @@ def analyze_patient(request: AnalyzeRequest):
         # Surface the error clearly — never silently swallow in a clinical tool
         raise HTTPException(status_code=500, detail=str(exc))
 
-# Serve the frontend statically so users can access the app at http://localhost:8000/
-frontend_path = os.path.join(os.path.dirname(__file__), "..", "frontend")
-app.mount("/", StaticFiles(directory=frontend_path, html=True), name="frontend")
+# ── Consumer Tier router ──
+from backend.consumer.router import consumer_router
+app.include_router(consumer_router)
+
+# NOTE: Frontend is served separately on port 8081 via `python -m http.server 8081`
+# Removing the catch-all StaticFiles mount here so it doesn't intercept POST requests
+# to /consumer/chat and /analyze with 405 Method Not Allowed.
 
