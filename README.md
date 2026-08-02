@@ -50,7 +50,7 @@ Our scoring engine currently evaluates 5 major conditions using verified guideli
    python -m http.server 8081 --directory frontend
    ```
 5. **Access the Application:**
-   Open a web browser and go to `http://localhost:8081/`.
+   Open a web browser and go to `http://localhost:8081/`. This is the unified landing page where you can choose to enter either the **Patient Portal (Consumer Tier)** or the **Clinician Dashboard**.
 
 ## 5. How to Run Tests
 The clinical engines use unit tests to ensure alignment with medical guidelines.
