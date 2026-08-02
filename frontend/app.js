@@ -3,7 +3,8 @@
 // ============================================================
 // CONFIG
 // ============================================================
-const API_BASE = 'http://localhost:8000';
+const IS_LOCAL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+const API_BASE = IS_LOCAL ? 'http://localhost:8000' : 'https://nidan-backend.onrender.com';
 
 // ============================================================
 // DOM REFERENCES
