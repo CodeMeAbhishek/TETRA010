@@ -1,0 +1,5 @@
+*.py
+backend/
+requirements.txt
+render.yaml
+main.py

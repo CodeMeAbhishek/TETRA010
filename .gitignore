@@ -37,3 +37,4 @@ venv.bak/
 # IDEs
 .vscode/
 .idea/
+.vercel
