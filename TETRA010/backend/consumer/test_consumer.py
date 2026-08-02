@@ -38,10 +38,11 @@ class TestParserSafety(unittest.TestCase):
             "bmi": {"value": 28.5, "source": "inferred", "confidence": 0.6},
         }
         updated, conflicts, impl = _merge_extracted(payload, extracted, [])
-        # All never-assumable fields must remain null
+        # All never-assumable fields must remain null EXCEPT bmi
         self.assertIsNone(updated.systolic_bp.value)
         self.assertIsNone(updated.diastolic_bp.value)
-        self.assertIsNone(updated.bmi.value)
+        self.assertIsNotNone(updated.bmi.value)
+        self.assertEqual(updated.bmi.value, 28.5)
 
     def test_bug_b_plausibility_bounds(self):
         """Bug B: Out-of-bounds values are rejected and added to implausible_extractions."""

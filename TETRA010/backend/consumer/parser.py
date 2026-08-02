@@ -213,7 +213,10 @@ def _merge_extracted(
 
         # SAFETY: Never-assumable enforcement
         if field_name in NEVER_ASSUMABLE_FIELDS:
-            if raw_source != "user_stated":
+            # Special case: BMI can be inferred mathematically from height and weight
+            if field_name == "bmi" and raw_source == "inferred":
+                pass
+            elif raw_source != "user_stated":
                 logger.info(
                     "Blocked never-assumable field '%s' with source '%s' (value: %s)",
                     field_name, raw_source, raw_value,

@@ -393,15 +393,18 @@ function renderLLM(text, language) {
 }
 
 function formatLLMText(text) {
-  let html = escHtml(text)
+  let html = window.marked ? window.marked.parse(text) : escHtml(text)
     .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
     .replace(/\n/g, '<br>');
     
   if (html.toLowerCase().includes('patient summary') && html.toLowerCase().includes('referral note')) {
     // Basic heuristic to split the text into two distinct sections for typography
-    const parts = html.split(/Referral Note/i);
-    return `<div class="llm-section-patient">${parts[0]}</div>
-            <div class="llm-section-clinical"><strong>Referral Note</strong><br>${parts[1]}</div>`;
+    // Handle both unparsed and marked HTML formats of the section header
+    const parts = html.split(/(?:<h\d>)?(?:<p>)?(?:<strong>)?Referral Note(?:<\/strong>)?(?:<\/p>)?(?:<\/h\d>)?/i);
+    if (parts.length > 1) {
+      return `<div class="llm-section-patient">${parts[0]}</div>
+              <div class="llm-section-clinical"><strong>Referral Note</strong><br>${parts[1]}</div>`;
+    }
   }
   return html;
 }

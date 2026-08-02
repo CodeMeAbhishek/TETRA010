@@ -397,9 +397,18 @@ function renderGapPills(gapSummary) {
   const engineNames = { idrs: 'Diabetes', cvd: 'CVD', htn: 'Blood Pressure', ckd: 'Kidney' };
 
   for (const [key, info] of Object.entries(gapSummary)) {
+    let isOk = info.can_run;
+    if (key === 'ckd') {
+      // CKD degrades gracefully, so can_run is always true. 
+      // But we only want the pill to turn green if actual kidney labs were provided.
+      const hasCreatinine = !info.missing_optional.includes('serum_creatinine_mg_dl');
+      const hasAcr = !info.missing_optional.includes('urine_acr_mg_g');
+      isOk = hasCreatinine || hasAcr;
+    }
+
     const pill = document.createElement('span');
-    pill.className = `gap-pill ${info.can_run ? 'gap-pill-ok' : 'gap-pill-missing'}`;
-    pill.textContent = `${info.can_run ? '✓' : '○'} ${engineNames[key] || key}`;
+    pill.className = `gap-pill ${isOk ? 'gap-pill-ok' : 'gap-pill-missing'}`;
+    pill.textContent = `${isOk ? '✓' : '○'} ${engineNames[key] || key}`;
     container.appendChild(pill);
   }
 
@@ -495,7 +504,8 @@ function renderResults(data) {
 
   // LLM explanation
   if (data.llm_explanation && !data.llm_explanation.startsWith('[LLM disabled')) {
-    html += `<div class="result-llm">${escapeHtml(data.llm_explanation)}</div>`;
+    const contentHtml = window.marked ? window.marked.parse(data.llm_explanation) : escapeHtml(data.llm_explanation);
+    html += `<div class="result-llm" style="line-height: 1.6; font-size: 0.95rem;">${contentHtml}</div>`;
   }
 
   panel.innerHTML = html;

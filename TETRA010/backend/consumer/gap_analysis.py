@@ -94,6 +94,23 @@ def analyze_gaps(payload: ConsumerIntakePayload) -> Dict[str, dict]:
         missing_opt = [f for f in sorted(optional) if not _field_available(payload, f)]
         can_run = len(missing_req) == 0
 
+        # Custom logic for CVD: Needs EITHER (cholesterol + diabetes) OR bmi
+        if engine_name == "cvd" and can_run:
+            has_chol = _field_available(payload, "total_cholesterol_mmol_L")
+            has_diab = _field_available(payload, "has_diabetes")
+            has_bmi = _field_available(payload, "bmi")
+            
+            if not ((has_chol and has_diab) or has_bmi):
+                can_run = False
+                if has_chol and not has_diab:
+                    missing_req.append("has_diabetes")
+                    if "has_diabetes" in missing_opt:
+                        missing_opt.remove("has_diabetes")
+                else:
+                    missing_req.append("bmi")
+                    if "bmi" in missing_opt:
+                        missing_opt.remove("bmi")
+
         result[engine_name] = {
             "can_run": can_run,
             "missing_required": missing_req,
